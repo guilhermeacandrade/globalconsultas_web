@@ -10,10 +10,10 @@ import { FormSignin } from "./_components/form_signin";
 
 export default function LoginPage() {
   return (
-    <div className="flex h-dvh w-full items-center justify-center p-9 xl:p-0 bg-foreground">
+    <div className="flex h-dvh w-full items-center justify-center p-9 xl:p-0 bg-background">
       <div className="flex h-[500px] w-full items-center justify-center gap-6 ">
         {/* LEFT - LOGO */}
-        <div className="hidden lg:flex lg:h-full lg:items-center lg:border-r lg:border-muted-foreground ">
+        <div className="hidden lg:flex lg:h-full lg:items-center lg:border-r lg:border-border ">
           <Image
             src="/assets/logo.png"
             alt="Grupo FR Facilities Logotipo"
