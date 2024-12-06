@@ -9,9 +9,9 @@ export default function PrivateLayout({
   return (
     <SidebarProvider>
       <SidebarLeft />
-      <SidebarInset className="p-2">
+      <SidebarInset className="p-2 ">
         <Navbar />
-        {children}
+        <div className=" px-4">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
