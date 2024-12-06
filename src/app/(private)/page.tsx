@@ -1,7 +1,9 @@
+import { ChartConsult } from "./_components/ChartConsult";
+
 export default function PanelPage() {
   return (
-    <div>
-      <h1 className="">Painel</h1>
+    <div className="mt-8">
+      <ChartConsult />
     </div>
   );
 }
