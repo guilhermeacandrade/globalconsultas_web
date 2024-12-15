@@ -26,6 +26,7 @@ import {
   Building2,
   UsersRound,
   FileSearch,
+  User2,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -35,6 +36,12 @@ const menus = [
     href: "/",
     icon: <LayoutDashboard className="" />,
     pathName: "/",
+  },
+  {
+    label: "Usuários",
+    href: "/usuarios",
+    icon: <User2 />,
+    pathName: "/usuarios",
   },
   {
     label: "Empresas",
