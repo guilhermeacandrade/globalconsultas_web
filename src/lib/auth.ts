@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { api } from "./api";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
@@ -18,22 +19,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Senha", type: "password" },
       },
       async authorize({ email, password }) {
-        // console.log({ username, password });
-
         // Verifica se foi passado usuário e senha
         if (!email || !password) return null;
 
         // Busca usuário no banco de dados
-        // const user = await api
+        const response = await api.post("/auth", {
+          email: email,
+          password: password,
+        });
+        const user = response.data;
+
+        if (!user) return null;
 
         // Se tudo OK, retornar login
         return {
-          // id: user.id,
-          // name: user.name,
-          // email: user.email,
-          id: "",
-          name: "",
-          email: "",
+          id: user.id,
+          name: user.name,
+          email: user.email,
         };
       },
     }),

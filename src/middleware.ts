@@ -2,8 +2,8 @@ import { auth } from "@/lib/auth";
 
 export default auth((req) => {
   if (!req.auth) {
-    // const newUrl = new URL("/entrar", req.nextUrl.origin);
-    // return Response.redirect(newUrl);
+    const newUrl = new URL("/entrar", req.nextUrl.origin);
+    return Response.redirect(newUrl);
   }
 
   // console.log("Rota permitida:", req.nextUrl.pathname);

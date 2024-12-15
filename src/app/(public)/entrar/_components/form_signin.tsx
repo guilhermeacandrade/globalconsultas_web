@@ -14,16 +14,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTransition } from "react";
 import { LoaderCircle } from "lucide-react";
-import { sleep } from "@/lib/utils";
+// import { sleep } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+// import { signIn } from "@/lib/auth";
 
 const schema = z.object({
   email: z
     .string({ required_error: "Obrigatório." })
     .trim()
-    .email({ message: "E-mail inválido." })
-    .optional(),
-  password: z.string({ required_error: "Obrigatório." }).optional(),
+    .email({ message: "E-mail inválido." }),
+  password: z.string({ required_error: "Obrigatório." }),
 });
 
 export type FormData = z.infer<typeof schema>;
@@ -35,16 +36,37 @@ export function FormSignin() {
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      email: undefined,
-      password: undefined,
+      email: "",
+      password: "",
     },
   });
 
   async function handleLogin(data: FormData) {
     startTransition(async () => {
       try {
-        console.log("🚀 ~ handleLogin ~ data:", data);
-        await sleep(2500);
+        const auth = await signIn("credentials", {
+          email: data.email,
+          password: data.password,
+          callbackUrl: "/",
+          redirect: false,
+        });
+
+        if (auth?.error) {
+          if (auth?.error === "CredentialsSignin") {
+            form.setError("root", {
+              type: "manual",
+              message: "Usuário e/ou senha inválido(s).",
+            });
+          } else {
+            form.setError("root", {
+              type: "manual",
+              message: "Falha na autenticação.",
+            });
+          }
+
+          return;
+        }
+
         route.replace("/");
       } catch (err) {
         form.setError("root", {
