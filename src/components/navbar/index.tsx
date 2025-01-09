@@ -10,7 +10,7 @@ export function Navbar() {
 
   return (
     <nav
-      className={cn("h-16 fixed w-full pr-2 pt-2", {
+      className={cn("h-16 fixed w-full pr-2 pt-2 z-40 bg-background", {
         "px-2": state === "expanded",
       })}
     >
