@@ -9,13 +9,18 @@ export function Navbar() {
   const { isMobile, state } = useSidebar();
 
   return (
-    <nav className="h-16 fixed w-full">
+    <nav
+      className={cn("h-16 fixed w-full pr-2 pt-2", {
+        "px-2": state === "expanded",
+      })}
+    >
       <div
         className={cn(
           "flex h-full items-center rounded-lg border border-border bg-sidebar p-1 text-sidebar-foreground shadow duration-200",
           "md:ml-[--sidebar-width]",
           {
-            "md:ml-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]":
+            // "md:ml-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]":
+            "md:ml-[calc(var(--sidebar-width-icon)_+_theme(spacing.2))]":
               state === "collapsed",
           }
         )}
