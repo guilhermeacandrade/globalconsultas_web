@@ -6,13 +6,18 @@ import Image from "next/image";
 import { AvatarUser } from "./avatar_user";
 
 export function Navbar() {
-  const { isMobile } = useSidebar();
+  const { isMobile, state } = useSidebar();
 
   return (
-    <nav className="h-16">
+    <nav className="h-16 fixed w-full">
       <div
         className={cn(
-          "flex h-full items-center rounded-lg border border-border bg-sidebar p-1 text-sidebar-foreground shadow duration-200"
+          "flex h-full items-center rounded-lg border border-border bg-sidebar p-1 text-sidebar-foreground shadow duration-200",
+          "md:ml-[--sidebar-width]",
+          {
+            "md:ml-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]":
+              state === "collapsed",
+          }
         )}
       >
         {isMobile && (

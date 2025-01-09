@@ -1,5 +1,5 @@
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Navbar, SidebarLeft } from "@/components";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { Container, Navbar, SidebarLeft } from "@/components";
 
 export default function PrivateLayout({
   children,
@@ -9,10 +9,10 @@ export default function PrivateLayout({
   return (
     <SidebarProvider>
       <SidebarLeft />
-      <SidebarInset className="p-2 ">
-        <Navbar />
-        <div className=" px-4">{children}</div>
-      </SidebarInset>
+      {/* <SidebarInset className="p-2 "> */}
+      <Navbar />
+      <Container>{children}</Container>
+      {/* </SidebarInset> */}
     </SidebarProvider>
   );
 }
