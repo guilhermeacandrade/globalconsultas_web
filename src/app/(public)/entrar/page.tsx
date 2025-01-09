@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import { FormSignin } from "./_components/form_signin";
+import { FormSignin } from "@/components/forms/form_signin";
 
 export default function LoginPage() {
   return (
