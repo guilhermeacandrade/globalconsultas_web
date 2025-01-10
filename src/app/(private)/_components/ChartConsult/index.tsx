@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArchiveRestore, BadgeAlert, SearchCheck } from "lucide-react";
+import { dateStringToDateUTC } from "@/lib/utils";
 
 const chartData = [
   { date: "2024-04-01", desktop: 222, mobile: 150 },
@@ -131,17 +132,28 @@ const chartConfig = {
     color: "hsl(var(--chart-1))",
   },
   mobile: {
-    label: "Mobile",
+    label: "Consultas",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
 export function ChartConsult() {
-  const [timeRange, setTimeRange] = React.useState("90d");
+  const [timeRange, setTimeRange] = React.useState("30d");
 
   const filteredData = chartData.filter((item) => {
-    const date = new Date(item.date);
-    const referenceDate = new Date("2024-06-30");
+    // const date = new Date(item.date);
+    // const referenceDate = new Date("2024-06-30");
+    // let daysToSubtract = 90;
+    // if (timeRange === "30d") {
+    //   daysToSubtract = 30;
+    // } else if (timeRange === "7d") {
+    //   daysToSubtract = 7;
+    // }
+    // const startDate = new Date(referenceDate);
+    // startDate.setDate(startDate.getDate() - daysToSubtract);
+
+    const date = dateStringToDateUTC(item.date);
+    const referenceDate = dateStringToDateUTC("2024-06-30");
     let daysToSubtract = 90;
     if (timeRange === "30d") {
       daysToSubtract = 30;
@@ -150,6 +162,7 @@ export function ChartConsult() {
     }
     const startDate = new Date(referenceDate);
     startDate.setDate(startDate.getDate() - daysToSubtract);
+
     return date >= startDate;
   });
 
@@ -169,13 +182,13 @@ export function ChartConsult() {
           </SelectTrigger>
           <SelectContent className="rounded-xl">
             <SelectItem value="90d" className="rounded-lg">
-              Last 3 months
+              Últimos 3 mêses
             </SelectItem>
             <SelectItem value="30d" className="rounded-lg">
-              Last 30 days
+              Últimos 30 dias
             </SelectItem>
             <SelectItem value="7d" className="rounded-lg">
-              Last 7 days
+              Últimos 7 dias
             </SelectItem>
           </SelectContent>
         </Select>
@@ -220,11 +233,18 @@ export function ChartConsult() {
               tickMargin={8}
               minTickGap={32}
               tickFormatter={(value) => {
-                const date = new Date(value);
-                return date.toLocaleDateString("pt-BR", {
+                // const date = new Date(value);
+                // return date.toLocaleDateString("pt-BR", {
+                //   month: "short",
+                //   day: "numeric",
+                // });
+                const date = dateStringToDateUTC(value);
+                const formatter = new Intl.DateTimeFormat("pt-BR", {
                   month: "short",
                   day: "numeric",
+                  timeZone: "UTC", // Force UTC timezone
                 });
+                return formatter.format(date);
               }}
             />
             <ChartTooltip
@@ -232,10 +252,18 @@ export function ChartConsult() {
               content={
                 <ChartTooltipContent
                   labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("pt-BR", {
+                    // return new Date(value).toLocaleDateString("pt-BR", {
+                    //   month: "short",
+                    //   day: "numeric",
+                    // });
+
+                    const date = dateStringToDateUTC(value);
+                    const formatter = new Intl.DateTimeFormat("pt-BR", {
                       month: "short",
                       day: "numeric",
+                      timeZone: "UTC", // Force UTC timezone
                     });
+                    return formatter.format(date);
                   }}
                   indicator="dot"
                 />
@@ -248,13 +276,13 @@ export function ChartConsult() {
               stroke="var(--color-mobile)"
               stackId="a"
             />
-            <Area
+            {/* <Area
               dataKey="desktop"
               type="natural"
               fill="url(#fillDesktop)"
               stroke="var(--color-desktop)"
               stackId="a"
-            />
+            /> */}
             <ChartLegend content={<ChartLegendContent />} />
           </AreaChart>
         </ChartContainer>
