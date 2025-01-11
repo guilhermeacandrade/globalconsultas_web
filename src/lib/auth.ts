@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { api } from "./api";
+import { IUserProfile } from "@/utils/types/auth.type";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
@@ -36,6 +37,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           id: user.id,
           name: user.name,
           email: user.email,
+          profile: user.profile,
         };
       },
     }),
@@ -47,6 +49,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
+        token.profile = user.profile;
       }
 
       return token;
@@ -55,7 +58,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       session.user.id = token.id as string;
       session.user.email = token.email as string;
-      session.user.name = token.name;
+      session.user.name = token.name as string;
+      session.user.profile = token.profile as IUserProfile;
 
       return session;
     },
