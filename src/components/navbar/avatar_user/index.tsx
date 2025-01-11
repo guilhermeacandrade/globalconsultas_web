@@ -23,7 +23,7 @@ export function AvatarUser() {
             <span className="text-xs font-light">{session?.user?.email}</span>
           </div>
 
-          <CircleUserRound size={40} />
+          <CircleUserRound size={32} />
         </div>
       </DropdownMenuTrigger>
 
