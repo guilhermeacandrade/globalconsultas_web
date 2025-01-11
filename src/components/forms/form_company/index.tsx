@@ -82,7 +82,7 @@ export function FormCompany({ closeModal }: IFormCompanyProps) {
   }
 
   return (
-    <div className="">
+    <div className="px-1">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}

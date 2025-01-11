@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use server";
 
 import { type TFormCompanyData } from "@/components/forms/form_company";
@@ -9,7 +11,7 @@ export async function createCompany(params: TFormCompanyData) {
     name: params.name,
   });
 
-  console.log(resp);
+  // console.log(resp);
 
   revalidatePath("/empresas");
 }
