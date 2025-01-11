@@ -27,7 +27,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           email: email,
           password: password,
         });
-        const user = response.data;
+        const user = response.data.data;
 
         if (!user) return null;
 
