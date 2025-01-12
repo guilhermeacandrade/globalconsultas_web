@@ -24,7 +24,7 @@ import { ICompany } from "@/utils/types/company.type";
 import { updateCompany } from "@/actions/companies/update_company";
 
 const schema = z.object({
-  name: z.string({ required_error: "Obrigatório." }),
+  name: z.string({ required_error: "Obrigatório." }).min(1, "Obrigatório."),
 });
 export type TFormCompanyData = z.infer<typeof schema>;
 
@@ -43,7 +43,7 @@ export function FormCompany({ editCompany, closeModal }: IFormCompanyProps) {
     },
   });
 
-  async function handleSubmit(data: TFormCompanyData) {
+  async function handleSend(data: TFormCompanyData) {
     startTransition(async () => {
       try {
         if (editCompany) {
@@ -99,7 +99,7 @@ export function FormCompany({ editCompany, closeModal }: IFormCompanyProps) {
     <div className="px-1">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(handleSubmit)}
+          onSubmit={form.handleSubmit(handleSend)}
           className="flex h-full flex-col pb-4"
         >
           <div className="flex flex-grow flex-col justify-center gap-2 ">
