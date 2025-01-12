@@ -12,10 +12,21 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ICompany } from "@/utils/types/company.type";
 import { PlusCircle } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 
-export function DialogCompany() {
+interface DialogCompanyProps {
+  editCompany?: ICompany;
+  trigger: React.ReactNode;
+  dialogTitle?: string;
+}
+
+export function DialogCompany({
+  trigger,
+  dialogTitle,
+  editCompany,
+}: DialogCompanyProps) {
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
   return (
@@ -25,10 +36,7 @@ export function DialogCompany() {
         setDialogIsOpen(isOpen);
       }}
     >
-      <DialogTrigger className="flex items-center gap-1 bg-primary text-background py-2 px-3 rounded-lg text-sm hover:bg-primary/90">
-        <PlusCircle size={20} />
-        Cadastrar Nova
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
 
       <DialogContent
 
@@ -37,11 +45,11 @@ export function DialogCompany() {
       // onEscapeKeyDown={(e) => e.preventDefault()} // Não fechar o dialog ao apertar a tecla ESC
       >
         <DialogHeader>
-          <DialogTitle>Nova Empresa</DialogTitle>
+          <DialogTitle>{dialogTitle}</DialogTitle>
         </DialogHeader>
 
         <ScrollArea className="flex-1 overflow-auto mt-4">
-          <FormCompany closeModal={setDialogIsOpen} />
+          <FormCompany closeModal={setDialogIsOpen} editCompany={editCompany} />
           <ScrollBar />
         </ScrollArea>
       </DialogContent>

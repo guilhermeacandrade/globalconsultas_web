@@ -20,6 +20,8 @@ import { CheckCheck, CircleX, LoaderCircle } from "lucide-react";
 import { createCompany } from "@/actions/companies";
 import { toast } from "@/hooks/use-toast";
 import { durationToast } from "@/lib/utils";
+import { ICompany } from "@/utils/types/company.type";
+import { updateCompany } from "@/actions/companies/update_company";
 
 const schema = z.object({
   name: z.string({ required_error: "Obrigatório." }),
@@ -27,36 +29,48 @@ const schema = z.object({
 export type TFormCompanyData = z.infer<typeof schema>;
 
 interface IFormCompanyProps {
+  editCompany?: ICompany;
   closeModal?: Dispatch<SetStateAction<boolean>>;
 }
 
-export function FormCompany({ closeModal }: IFormCompanyProps) {
+export function FormCompany({ editCompany, closeModal }: IFormCompanyProps) {
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<TFormCompanyData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: "",
+      name: editCompany ? editCompany.name : "",
     },
   });
 
   async function handleSubmit(data: TFormCompanyData) {
     startTransition(async () => {
       try {
-        const company = await createCompany(data);
+        if (editCompany) {
+          // update
+          const company = await updateCompany({
+            ...data,
+            id: editCompany.id,
+          });
+        } else {
+          // create
+          const company = await createCompany(data);
+
+          form.reset();
+        }
 
         toast({
           title: "Sucesso!",
           description: (
             <p className="flex items-center gap-3">
               <CheckCheck className="text-green-500" />
-              Empresa cadastrada com sucesso.
+              {editCompany
+                ? "Empresa editada com sucesso."
+                : "Empresa cadastrada com sucesso."}
             </p>
           ),
           duration: durationToast,
         });
-
-        form.reset();
 
         if (closeModal) closeModal(false);
       } catch (err: any) {
