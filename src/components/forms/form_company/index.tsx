@@ -17,11 +17,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dispatch, SetStateAction, useTransition } from "react";
 import { CheckCheck, CircleX, LoaderCircle } from "lucide-react";
-import { createCompany } from "@/actions/companies";
+import { createCompany, updateCompany } from "@/actions/companies";
 import { toast } from "@/hooks/use-toast";
 import { durationToast } from "@/lib/utils";
 import { ICompany } from "@/utils/types/company.type";
-import { updateCompany } from "@/actions/companies/update_company";
 
 const schema = z.object({
   name: z.string({ required_error: "Obrigatório." }).min(1, "Obrigatório."),
