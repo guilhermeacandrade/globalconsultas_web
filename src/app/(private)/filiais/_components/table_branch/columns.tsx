@@ -48,7 +48,7 @@ export const columns: ColumnDef<IBranch>[] = [
                 </Tooltip>
               </button>
             }
-            dialogTitle="Editando Empresa"
+            dialogTitle="Editando Filial"
             editBranch={branch}
           />
 

@@ -15,12 +15,40 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dispatch, SetStateAction, useTransition } from "react";
-import { CheckCheck, CircleX, LoaderCircle } from "lucide-react";
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
+import {
+  Check,
+  CheckCheck,
+  ChevronsUpDown,
+  CircleX,
+  LoaderCircle,
+} from "lucide-react";
 
 import { toast } from "@/hooks/use-toast";
-import { durationToast } from "@/lib/utils";
+import { cn, durationToast } from "@/lib/utils";
 import { IBranch } from "@/utils/types/branch.type";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { ICompany } from "@/utils/types/company.type";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { api } from "@/lib/api";
+import { createBranch } from "@/actions/branches";
 
 const schema = z.object({
   fantasyName: z
@@ -28,6 +56,7 @@ const schema = z.object({
     .min(1, "Obrigatório."),
   socialReason: z.string({ required_error: "Obrigatório." }).optional(),
   cnpj: z.string({ required_error: "Obrigatório." }).min(1, "Obrigatório."),
+  companyId: z.string({ required_error: "Obrigatório." }),
 });
 export type TFormBranchData = z.infer<typeof schema>;
 
@@ -38,13 +67,15 @@ interface IFormBranchProps {
 
 export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
   const [isPending, startTransition] = useTransition();
+  const [listCompanies, setListCompanies] = useState<ICompany[]>([]);
 
   const form = useForm<TFormBranchData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      fantasyName: "",
-      socialReason: "",
-      cnpj: "",
+      fantasyName: editBranch ? editBranch.fantasyName : "",
+      socialReason: editBranch ? editBranch.socialReason : "",
+      cnpj: editBranch ? editBranch.cnpj : "",
+      companyId: editBranch ? editBranch.companyId : "",
     },
   });
 
@@ -59,7 +90,7 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
           // });
         } else {
           // create
-          // const branch = await createCompany(data);
+          const branch = await createBranch(data);
 
           form.reset();
         }
@@ -100,6 +131,21 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
     });
   }
 
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const resp = await api.get("/company");
+        const respData: ICompany[] = resp.data.data;
+
+        setListCompanies(respData);
+      } catch (error) {
+        console.log("🚀 ~ fetchCompanies ~ error:", error);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
+
   return (
     <div className="px-1">
       <Form {...form}>
@@ -108,6 +154,77 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
           className="flex h-full flex-col pb-4"
         >
           <div className="flex flex-grow flex-col justify-center gap-2 ">
+            <FormField
+              control={form.control}
+              name="companyId"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="font-semibold">Empresa</FormLabel>
+                  <Popover modal={true}>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn(
+                            "w-full justify-between",
+                            !field.value && "text-muted-foreground",
+                            {
+                              "text-destructive":
+                                form.formState.errors.companyId,
+                            }
+                          )}
+                        >
+                          {field.value
+                            ? listCompanies.find(
+                                (company) => company.id === field.value
+                              )?.name
+                            : "Selecionar..."}
+                          <ChevronsUpDown className="opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+
+                    <PopoverContent className="p-0 z-[99]">
+                      <Command>
+                        <CommandInput
+                          placeholder="Buscar empresa..."
+                          className="h-9"
+                        />
+                        <CommandList>
+                          <CommandEmpty>
+                            Nenhuma empresa encontrada.
+                          </CommandEmpty>
+                          <CommandGroup>
+                            {listCompanies.map((company) => (
+                              <CommandItem
+                                value={company.name}
+                                key={company.id}
+                                onSelect={() => {
+                                  form.setValue("companyId", company.id);
+                                }}
+                              >
+                                {company.name}
+                                <Check
+                                  className={cn(
+                                    "ml-auto",
+                                    company.id === field.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  {/* <FormMessage className="mt-1 px-2 text-xs" /> */}
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="fantasyName"
