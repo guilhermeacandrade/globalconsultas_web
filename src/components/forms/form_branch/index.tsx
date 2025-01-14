@@ -31,7 +31,7 @@ import {
 } from "lucide-react";
 
 import { toast } from "@/hooks/use-toast";
-import { cn, durationToast } from "@/lib/utils";
+import { cn, durationToast, formatCNPJ, removerFormat } from "@/lib/utils";
 import { IBranch } from "@/utils/types/branch.type";
 import {
   Popover,
@@ -74,7 +74,7 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
     defaultValues: {
       fantasyName: editBranch ? editBranch.fantasyName : "",
       socialReason: editBranch ? editBranch.socialReason : "",
-      cnpj: editBranch ? editBranch.cnpj : "",
+      cnpj: editBranch ? formatCNPJ(editBranch.cnpj) : "",
       companyId: editBranch ? editBranch.companyId : "",
     },
   });
@@ -90,7 +90,10 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
           // });
         } else {
           // create
-          const branch = await createBranch(data);
+          const branch = await createBranch({
+            ...data,
+            cnpj: removerFormat(data.cnpj),
+          });
 
           form.reset();
         }
@@ -273,6 +276,9 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
                       className="focus-visible:ring-primary"
                       maxLength={18}
                       {...field}
+                      onChange={(e) => {
+                        field.onChange(formatCNPJ(e.target.value));
+                      }}
                     />
                   </FormControl>
                   <FormMessage className="text-xs pt-1" />

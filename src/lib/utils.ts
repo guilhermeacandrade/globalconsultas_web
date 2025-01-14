@@ -19,3 +19,16 @@ export function dateStringToDateUTC(dateStr: string) {
 
   return dateUTC;
 }
+
+export function formatCNPJ(value: string) {
+  return value
+    .replace(/\D/g, "") // Remove tudo que não é dígito
+    .replace(/^(\d{2})(\d)/, "$1.$2") // Adiciona ponto após os dois primeiros dígitos
+    .replace(/^(\d{2}\.\d{3})(\d)/, "$1.$2") // Adiciona ponto após o quinto dígito
+    .replace(/\.(\d{3})(\d)/, ".$1/$2") // Adiciona barra após o oitavo dígito
+    .replace(/(\d{4})(\d)/, "$1-$2") // Adiciona hífen após o décimo segundo dígito
+    .replace(/(-\d{2})\d+?$/, "$1"); // Limita a 14 caracteres (00.000.000/0000-00)
+}
+export function removerFormat(value: string) {
+  return value.replace(/\D/g, ""); // Remove todos os não dígitos
+}
