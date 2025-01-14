@@ -39,10 +39,9 @@ export function DialogCompany({
       <DialogTrigger asChild>{trigger}</DialogTrigger>
 
       <DialogContent
-
-      // className="my-auto flex max-h-[calc(100svh-48px)] flex-col"
-      // onInteractOutside={(e) => e.preventDefault()} // Não fechar o dialog ao clicar fora dele
-      // onEscapeKeyDown={(e) => e.preventDefault()} // Não fechar o dialog ao apertar a tecla ESC
+        className="my-auto flex max-h-[calc(100svh-48px)] flex-col"
+        onInteractOutside={(e) => e.preventDefault()} // Não fechar o dialog ao clicar fora dele
+        onEscapeKeyDown={(e) => e.preventDefault()} // Não fechar o dialog ao apertar a tecla ESC
       >
         <DialogHeader>
           <DialogTitle>{dialogTitle}</DialogTitle>
