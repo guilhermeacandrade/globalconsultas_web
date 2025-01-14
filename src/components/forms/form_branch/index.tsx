@@ -48,7 +48,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { api } from "@/lib/api";
-import { createBranch } from "@/actions/branches";
+import { createBranch, updateBranch } from "@/actions/branches";
 
 const schema = z.object({
   fantasyName: z
@@ -84,16 +84,13 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
       try {
         if (editBranch) {
           // update
-          // const branch = await updateCompany({
-          //   ...data,
-          //   id: editBranch.id,
-          // });
+          const branch = await updateBranch({
+            ...data,
+            id: editBranch.id,
+          });
         } else {
           // create
-          const branch = await createBranch({
-            ...data,
-            cnpj: removerFormat(data.cnpj),
-          });
+          const branch = await createBranch(data);
 
           form.reset();
         }

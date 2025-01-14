@@ -7,12 +7,18 @@ import { api } from "@/lib/api";
 import { removerFormat } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
-export async function createBranch(params: TFormBranchData) {
-  const resp = await api.post("/branch", {
-    companyId: params.companyId,
+interface UpdateBranchProps extends TFormBranchData {
+  id: string;
+}
+
+export async function updateBranch(params: UpdateBranchProps) {
+  // console.log("🚀 ~ updateBranch ~ params:", params);
+
+  const resp = await api.put(`/branch/${params.id}`, {
     fantasyName: params.fantasyName,
     socialReason: params.socialReason,
     cnpj: params.cnpj ? removerFormat(params.cnpj) : null,
+    companyId: params.companyId,
   });
 
   // console.log(resp);
