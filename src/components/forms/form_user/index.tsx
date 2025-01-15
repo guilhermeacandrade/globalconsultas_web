@@ -185,7 +185,7 @@ export function FormUser({ closeModal, editUser }: IFormUserProps) {
                       </FormControl>
                     </PopoverTrigger>
 
-                    <PopoverContent className="w-[200px] p-0">
+                    <PopoverContent className="p-0">
                       <Command>
                         <CommandInput
                           placeholder="Procurar perfil..."

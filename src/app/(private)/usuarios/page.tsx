@@ -10,7 +10,7 @@ export default async function UsersPage() {
 
   return (
     <div className="mt-3 px-2 max-w-5xl mx-auto">
-      <div className="py-2 flex justify-between">
+      <div className="py-2 flex justify-between items-center">
         <h3 className="text-xl font-semibold">Usuários</h3>
 
         <DialogUser
