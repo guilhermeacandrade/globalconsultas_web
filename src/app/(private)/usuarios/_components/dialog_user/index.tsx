@@ -3,6 +3,7 @@
 "use client";
 
 import { FormCompany } from "@/components/forms/form_company";
+import { FormUser } from "@/components/forms/form_user";
 import {
   Dialog,
   DialogContent,
@@ -48,7 +49,7 @@ export function DialogUser({
         </DialogHeader>
 
         <ScrollArea className="flex-1 overflow-auto mt-4">
-          {/* <FormCompany closeModal={setDialogIsOpen} editUser={editUser} /> */}
+          <FormUser closeModal={setDialogIsOpen} editUser={editUser} />
           <ScrollBar />
         </ScrollArea>
       </DialogContent>

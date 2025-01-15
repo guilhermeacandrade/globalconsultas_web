@@ -3,7 +3,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { IUser } from "@/utils/types/user.type";
+import { IUser, IUserProfile, PROFILE_LABELS } from "@/utils/types/user.type";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   DropdownMenu,
@@ -18,7 +18,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Edit2, MoreHorizontal } from "lucide-react";
+import { Crown, Edit2, MoreHorizontal, User } from "lucide-react";
 import { DialogUser } from "../dialog_user";
 
 export const columns: ColumnDef<IUser>[] = [
@@ -29,6 +29,16 @@ export const columns: ColumnDef<IUser>[] = [
   {
     accessorKey: "profile",
     header: "Perfil",
+    cell: ({ row: { original: user } }) => {
+      return (
+        <div className="flex items-center gap-2 w-fit px-3 py-1 rounded-xl bg-muted text-xs font-normal text-foreground ">
+          {PROFILE_LABELS[user.profile]}
+          {user.profile === IUserProfile.ADMIN && (
+            <Crown size={12} className="text-primary" />
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "email",
