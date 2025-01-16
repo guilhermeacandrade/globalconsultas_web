@@ -1,6 +1,5 @@
 "use client";
 
-// import { useSession } from "next-auth/react";
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +10,6 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarTrigger,
-  SidebarMenuSkeleton,
   useSidebar,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
@@ -29,6 +27,8 @@ import {
   User2,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { IUserProfile } from "@/utils/types/user.type";
+import { useSession } from "next-auth/react";
 
 const menus = [
   {
@@ -36,44 +36,63 @@ const menus = [
     href: "/",
     icon: <LayoutDashboard className="" />,
     pathName: "/",
+    allowedProfiles: [
+      IUserProfile.ADMIN,
+      IUserProfile.COMPANY,
+      IUserProfile.INVESTIGATOR,
+    ],
   },
   {
     label: "Usuários",
     href: "/usuarios",
     icon: <User2 />,
     pathName: "/usuarios",
+    allowedProfiles: [IUserProfile.ADMIN],
   },
   {
     label: "Empresas",
     href: "/empresas",
     icon: <Hotel />,
     pathName: "/empresas",
+    allowedProfiles: [IUserProfile.ADMIN],
   },
   {
     label: "Filiais",
     href: "/filiais",
     icon: <Building2 />,
     pathName: "/filiais",
+    allowedProfiles: [IUserProfile.ADMIN],
   },
   {
     label: "Candidatos",
     href: "/candidatos",
     icon: <UsersRound />,
     pathName: "/candidatos",
+    allowedProfiles: [
+      IUserProfile.ADMIN,
+      IUserProfile.COMPANY,
+      IUserProfile.RH,
+    ],
   },
   {
     label: "Consultas",
     href: "/consultas",
     icon: <FileSearch />,
     pathName: "/consultas",
+    allowedProfiles: [
+      IUserProfile.ADMIN,
+      IUserProfile.COMPANY,
+      IUserProfile.INVESTIGATOR,
+      IUserProfile.RH,
+    ],
   },
 ];
 
 export function SidebarLeft() {
+  const { data: session } = useSession();
   const { open, isMobile } = useSidebar();
   const pathname = usePathname();
-  // const { data, status } = useSession();
-  const status: string = "authenticated";
+  // const status: string = "authenticated";
 
   return (
     <Sidebar collapsible="icon" className="z-50">
@@ -103,25 +122,30 @@ export function SidebarLeft() {
               {menus.map((menu, idx) => {
                 return (
                   <SidebarMenuItem key={idx}>
-                    {status === "loading" ? (
+                    {/* {status === "loading" ? (
                       <SidebarMenuSkeleton showIcon />
-                    ) : (
-                      <SidebarMenuButton
-                        asChild
-                        tooltip={menu.label}
-                        className={cn(
-                          "py-6 transition-all duration-300",
-                          pathname === menu.pathName
-                            ? "bg-background text-primary hover:bg-background hover:text-primary font-bold shadow-md"
-                            : "hover:bg-primary hover:text-sidebar-accent"
-                        )}
-                      >
-                        <Link href={menu.href}>
-                          {menu.icon}
-                          <span>{menu.label}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    )}
+                    ) : ( */}
+                    <SidebarMenuButton
+                      asChild
+                      tooltip={menu.label}
+                      className={cn(
+                        "py-6 transition-all duration-300",
+                        pathname === menu.pathName
+                          ? "bg-background text-primary hover:bg-background hover:text-primary font-bold shadow-md"
+                          : "hover:bg-primary hover:text-sidebar-accent",
+                        {
+                          hidden: !menu.allowedProfiles.includes(
+                            session?.user.profile
+                          ),
+                        }
+                      )}
+                    >
+                      <Link href={menu.href}>
+                        {menu.icon}
+                        <span>{menu.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                    {/* )} */}
                   </SidebarMenuItem>
                 );
               })}
