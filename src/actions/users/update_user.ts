@@ -18,6 +18,7 @@ export async function updateUser(params: UpdateUserProps) {
     email: params.email,
     profile: params.profile,
     password: params.password,
+    status: params.status,
   });
 
   // console.log(resp);

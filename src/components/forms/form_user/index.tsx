@@ -39,6 +39,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Switch } from "@/components/ui/switch";
 import { createUser, updateUser } from "@/actions/users";
 
 const createSchema = (edit: boolean) =>
@@ -54,6 +55,7 @@ const createSchema = (edit: boolean) =>
       profile: z.enum(Object.values(IUserProfile) as [IUserProfile], {
         required_error: "Obrigatório.",
       }),
+      status: z.boolean(),
     })
     .superRefine((data, ctx) => {
       console.log("🚀 ~ .superRefine ~ edit:", edit);
@@ -93,6 +95,7 @@ export function FormUser({ closeModal, editUser }: IFormUserProps) {
       email: editUser ? editUser.email : "",
       password: "",
       profile: editUser ? editUser.profile : undefined,
+      status: editUser ? editUser.status : true,
     },
   });
 
@@ -155,72 +158,91 @@ export function FormUser({ closeModal, editUser }: IFormUserProps) {
           className="flex h-full flex-col pb-4"
         >
           <div className="flex flex-grow flex-col justify-center gap-2 ">
-            <FormField
-              control={form.control}
-              name="profile"
-              render={({ field }) => (
-                <FormItem className="">
-                  <FormLabel>Perfil do Usuário</FormLabel>
-                  <Popover modal>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          // disabled={data?.user.profile === "USER"}
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            "w-full justify-between",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value
-                            ? PROFILE_OPTIONS.find(
-                                (profile) => profile.value === field.value
-                              )?.label
-                            : "Selecione um perfil"}
-                          <ChevronsUpDown className="opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
+            <div className="flex gap-4">
+              <FormField
+                control={form.control}
+                name="profile"
+                render={({ field }) => (
+                  <FormItem className="flex-grow">
+                    <FormLabel>Perfil do Usuário</FormLabel>
+                    <Popover modal>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            // disabled={data?.user.profile === "USER"}
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              "w-full justify-between",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value
+                              ? PROFILE_OPTIONS.find(
+                                  (profile) => profile.value === field.value
+                                )?.label
+                              : "Selecione um perfil"}
+                            <ChevronsUpDown className="opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
 
-                    <PopoverContent className="p-0">
-                      <Command>
-                        <CommandInput
-                          placeholder="Procurar perfil..."
-                          className="h-9"
-                        />
-                        <CommandList>
-                          <CommandEmpty>Nenhum perfil.</CommandEmpty>
-                          <CommandGroup>
-                            {PROFILE_OPTIONS.map((profile) => (
-                              <CommandItem
-                                value={profile.label}
-                                key={profile.value}
-                                onSelect={() => {
-                                  form.setValue("profile", profile.value);
-                                }}
-                              >
-                                {profile.label}
-                                <Check
-                                  className={cn(
-                                    "ml-auto",
-                                    profile.value === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage className="mt-1 text-xs" />
-                </FormItem>
-              )}
-            />
+                      <PopoverContent className="p-0">
+                        <Command>
+                          <CommandInput
+                            placeholder="Procurar perfil..."
+                            className="h-9"
+                          />
+                          <CommandList>
+                            <CommandEmpty>Nenhum perfil.</CommandEmpty>
+                            <CommandGroup>
+                              {PROFILE_OPTIONS.map((profile) => (
+                                <CommandItem
+                                  value={profile.label}
+                                  key={profile.value}
+                                  onSelect={() => {
+                                    form.setValue("profile", profile.value);
+                                  }}
+                                >
+                                  {profile.label}
+                                  <Check
+                                    className={cn(
+                                      "ml-auto",
+                                      profile.value === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage className="mt-1 text-xs" />
+                  </FormItem>
+                )}
+              />
 
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col gap-4 items-center">
+                    <FormLabel>Status</FormLabel>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        disabled={!!!editUser}
+                        aria-readonly
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
               name="name"

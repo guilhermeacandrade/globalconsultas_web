@@ -3,6 +3,7 @@ export interface IUser {
   name?: string;
   email: string;
   profile: IUserProfile;
+  status: boolean;
 }
 
 export enum IUserProfile {

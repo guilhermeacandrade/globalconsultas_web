@@ -18,7 +18,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Crown, Edit2, MoreHorizontal, User } from "lucide-react";
+import { Circle, Crown, Edit2, MoreHorizontal, User } from "lucide-react";
 import { DialogUser } from "../dialog_user";
 
 export const columns: ColumnDef<IUser>[] = [
@@ -26,6 +26,7 @@ export const columns: ColumnDef<IUser>[] = [
     accessorKey: "name",
     header: "Nome",
   },
+
   {
     accessorKey: "profile",
     header: "Perfil",
@@ -40,9 +41,44 @@ export const columns: ColumnDef<IUser>[] = [
       );
     },
   },
+
   {
     accessorKey: "email",
     header: "E-mail",
+  },
+
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row: { original: user } }) => {
+      return (
+        <div
+          className={cn(
+            "flex w-full max-w-20 items-center justify-center px-2 py-0 gap-2 text-xs rounded-xl",
+            {
+              "bg-green-500/10 text-green-500": user.status,
+            },
+            {
+              "bg-red-500/10 text-red-500": !user.status,
+            }
+          )}
+        >
+          <Circle
+            size={8}
+            className={cn(
+              "rounded-full",
+              {
+                "bg-green-500 ": user.status,
+              },
+              {
+                "bg-red-500 ": !user.status,
+              }
+            )}
+          />
+          {user.status ? "Ativo" : "Inativo"}
+        </div>
+      );
+    },
   },
 
   {
@@ -52,7 +88,7 @@ export const columns: ColumnDef<IUser>[] = [
     },
     cell: ({ row: { original: user } }) => {
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-end">
           <DialogUser
             trigger={
               <button className="flex items-center gap-2">

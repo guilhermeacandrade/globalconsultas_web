@@ -12,6 +12,7 @@ export async function createUser(params: TFormUserData) {
     email: params.email,
     password: params.password,
     profile: params.profile,
+    status: params.status,
   });
 
   // console.log(resp);
