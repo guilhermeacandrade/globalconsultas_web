@@ -284,7 +284,7 @@ export function FormUser({ closeModal, editUser }: IFormUserProps) {
               name="password"
               render={({ field }) => (
                 <FormItem className="space-y-1">
-                  <FormLabel>Senha</FormLabel>
+                  <FormLabel>{editUser ? "Nova Senha" : "Senha"}</FormLabel>
                   <FormControl>
                     <Input
                       placeholder=""
