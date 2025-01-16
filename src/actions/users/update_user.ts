@@ -11,12 +11,13 @@ interface UpdateUserProps extends TFormUserData {
 }
 
 export async function updateUser(params: UpdateUserProps) {
-  // console.log("🚀 ~ updateCompany ~ params:", params);
+  // console.log("🚀 ~ updateUser ~ params:", params);
 
   const resp = await api.put(`/user/${params.id}`, {
     name: params.name,
     email: params.email,
     profile: params.profile,
+    password: params.password,
   });
 
   // console.log(resp);

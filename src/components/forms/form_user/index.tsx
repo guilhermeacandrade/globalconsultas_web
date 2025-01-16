@@ -89,9 +89,9 @@ export function FormUser({ closeModal, editUser }: IFormUserProps) {
   const form = useForm<TFormUserData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: editUser ? editUser.name : undefined,
-      email: editUser ? editUser.email : undefined,
-      password: undefined,
+      name: editUser ? editUser.name : "",
+      email: editUser ? editUser.email : "",
+      password: "",
       profile: editUser ? editUser.profile : undefined,
     },
   });
