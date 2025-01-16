@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { api } from "./api";
-import { IUserProfile } from "@/utils/types/auth.type";
+import { IUserProfile } from "@/utils/types/user.type";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
@@ -24,21 +24,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!email || !password) return null;
 
         // Busca usuário no banco de dados
-        const response = await api.post("/auth", {
-          email: email,
-          password: password,
-        });
-        const user = response.data.data;
+        try {
+          const response = await api.post("/auth", {
+            email: email,
+            password: password,
+          });
+          console.log("🚀 ~ authorize ~ response:", response);
 
-        if (!user) return null;
+          const user = response.data.data;
+          console.log("🚀 ~ authorize ~ user:", user);
 
-        // Se tudo OK, retornar login
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          profile: user.profile,
-        };
+          if (!user) return null;
+
+          if (!user.status) return null;
+
+          // Se tudo OK, retornar login
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            profile: user.profile,
+          };
+        } catch (err: any) {
+          console.log("🚀 ~ authorize ~ err:", err);
+          return null;
+        }
       },
     }),
   ],

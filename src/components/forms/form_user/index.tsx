@@ -99,8 +99,6 @@ export function FormUser({ closeModal, editUser }: IFormUserProps) {
   async function onSubmit(data: TFormUserData) {
     startTransition(async () => {
       try {
-        console.log(data);
-
         if (editUser) {
           // update
           const user = await updateUser({
