@@ -15,7 +15,13 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dispatch, SetStateAction, useTransition } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
 import {
   Check,
   CheckCheck,
@@ -41,6 +47,9 @@ import {
 } from "@/components/ui/command";
 import { Switch } from "@/components/ui/switch";
 import { createUser, updateUser } from "@/actions/users";
+import { ICompany } from "@/utils/types/company.type";
+import { api } from "@/lib/api";
+import { IBranch } from "@/utils/types/branch.type";
 
 const createSchema = (edit: boolean) =>
   z
@@ -56,9 +65,10 @@ const createSchema = (edit: boolean) =>
         required_error: "Obrigatório.",
       }),
       status: z.boolean(),
+      companyId: z.string().optional(),
+      branchId: z.string().optional(),
     })
     .superRefine((data, ctx) => {
-      console.log("🚀 ~ .superRefine ~ edit:", edit);
       if (!edit) {
         if (!data.password) {
           ctx.addIssue({
@@ -74,6 +84,22 @@ const createSchema = (edit: boolean) =>
           });
         }
       }
+
+      if (data.profile === IUserProfile.COMPANY && !data.companyId) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Obrigatório",
+          path: ["companyId"],
+        });
+      }
+
+      if (data.profile === IUserProfile.RH && !data.branchId) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Obrigatório",
+          path: ["branchId"],
+        });
+      }
     });
 
 // export type TFormUserData = z.infer<typeof schema>;
@@ -86,6 +112,8 @@ interface IFormUserProps {
 
 export function FormUser({ closeModal, editUser }: IFormUserProps) {
   const [isPending, startTransition] = useTransition();
+  const [listCompanies, setListCompanies] = useState<ICompany[]>([]);
+  const [listBranches, setListBranches] = useState<IBranch[]>([]);
 
   const schema = createSchema(!!editUser);
   const form = useForm<TFormUserData>({
@@ -96,8 +124,14 @@ export function FormUser({ closeModal, editUser }: IFormUserProps) {
       password: "",
       profile: editUser ? editUser.profile : undefined,
       status: editUser ? editUser.status : true,
+      companyId:
+        editUser && editUser.companyId ? editUser.companyId : undefined,
+      branchId: editUser && editUser.branchId ? editUser.branchId : undefined,
     },
   });
+
+  const watchProfileValue = form.watch("profile");
+  // console.log("🚀 ~ FormUser ~ watchProfileValue:", watchProfileValue);
 
   async function onSubmit(data: TFormUserData) {
     startTransition(async () => {
@@ -149,6 +183,33 @@ export function FormUser({ closeModal, editUser }: IFormUserProps) {
       }
     });
   }
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const resp = await api.get("/company");
+        const respData: ICompany[] = resp.data.data;
+
+        setListCompanies(respData);
+      } catch (error) {
+        console.log("🚀 ~ fetchCompanies ~ error:", error);
+      }
+    };
+
+    const fetchBranches = async () => {
+      try {
+        const resp = await api.get("/branch");
+        const respData: IBranch[] = resp.data.data;
+
+        setListBranches(respData);
+      } catch (error) {
+        console.log("🚀 ~ fetchBranches ~ error:", error);
+      }
+    };
+
+    fetchCompanies();
+    fetchBranches();
+  }, []);
 
   return (
     <div className="px-1">
@@ -243,6 +304,153 @@ export function FormUser({ closeModal, editUser }: IFormUserProps) {
                 )}
               />
             </div>
+
+            {watchProfileValue === IUserProfile.COMPANY && (
+              <FormField
+                control={form.control}
+                name="companyId"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="font-semibold">Empresa</FormLabel>
+                    <Popover modal={true}>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              "w-full justify-between",
+                              !field.value && "text-muted-foreground",
+                              {
+                                "text-destructive":
+                                  form.formState.errors.companyId,
+                              }
+                            )}
+                          >
+                            {field.value
+                              ? listCompanies.find(
+                                  (company) => company.id === field.value
+                                )?.name
+                              : "Selecionar..."}
+                            <ChevronsUpDown className="opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+
+                      <PopoverContent className="p-0 z-[99]">
+                        <Command>
+                          <CommandInput
+                            placeholder="Buscar empresa..."
+                            className="h-9"
+                          />
+                          <CommandList>
+                            <CommandEmpty>
+                              Nenhuma empresa encontrada.
+                            </CommandEmpty>
+                            <CommandGroup>
+                              {listCompanies.map((company) => (
+                                <CommandItem
+                                  value={company.name}
+                                  key={company.id}
+                                  onSelect={() => {
+                                    form.setValue("companyId", company.id);
+                                  }}
+                                >
+                                  {company.name}
+                                  <Check
+                                    className={cn(
+                                      "ml-auto",
+                                      company.id === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    {/* <FormMessage className="mt-1 px-2 text-xs" /> */}
+                  </FormItem>
+                )}
+              />
+            )}
+
+            {watchProfileValue === IUserProfile.RH && (
+              <FormField
+                control={form.control}
+                name="branchId"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="font-semibold">Filial</FormLabel>
+                    <Popover modal={true}>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              "w-full justify-between",
+                              !field.value && "text-muted-foreground",
+                              {
+                                "text-destructive":
+                                  form.formState.errors.branchId,
+                              }
+                            )}
+                          >
+                            {field.value
+                              ? listBranches.find(
+                                  (branch) => branch.id === field.value
+                                )?.fantasyName
+                              : "Selecionar..."}
+                            <ChevronsUpDown className="opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+
+                      <PopoverContent className="p-0 z-[99]">
+                        <Command>
+                          <CommandInput
+                            placeholder="Buscar filial..."
+                            className="h-9"
+                          />
+                          <CommandList>
+                            <CommandEmpty>
+                              Nenhuma filial encontrada.
+                            </CommandEmpty>
+                            <CommandGroup>
+                              {listBranches.map((branch) => (
+                                <CommandItem
+                                  value={branch.fantasyName}
+                                  key={branch.id}
+                                  onSelect={() => {
+                                    form.setValue("branchId", branch.id);
+                                  }}
+                                >
+                                  {branch.fantasyName}
+                                  <Check
+                                    className={cn(
+                                      "ml-auto",
+                                      branch.id === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    {/* <FormMessage className="mt-1 px-2 text-xs" /> */}
+                  </FormItem>
+                )}
+              />
+            )}
+
             <FormField
               control={form.control}
               name="name"
