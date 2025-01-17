@@ -44,6 +44,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             name: user.name,
             email: user.email,
             profile: user.profile,
+            companyId: user.companyId,
+            company: user.company,
+            branchId: user.branchId,
+            branch: user.branch,
           };
         } catch (err: any) {
           console.log("🚀 ~ authorize ~ err:", err);
@@ -60,6 +64,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.name = user.name;
         token.email = user.email;
         token.profile = user.profile;
+        token.companyId = user.companyId;
+        token.company = user.company;
+        token.branchId = user.branchId;
+        token.branch = user.branch;
       }
 
       return token;
@@ -70,6 +78,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.email = token.email as string;
       session.user.name = token.name as string;
       session.user.profile = token.profile as IUserProfile;
+      session.user.companyId = token.companyId as string | null;
+      session.user.company = token.company as {
+        id: string;
+        name: string;
+      } | null;
+      session.user.branchId = token.branchId as string | null;
+      session.user.branch = token.branch as {
+        id: string;
+        fantasyName: string;
+        socialReason: string | null;
+        cnpj: string;
+        company: {
+          id: string;
+          name: string;
+        };
+      } | null;
 
       return session;
     },

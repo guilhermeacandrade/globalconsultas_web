@@ -7,6 +7,22 @@ declare module "next-auth" {
     name: string;
     email: string;
     profile: IUserProfile;
+    companyId: string | null;
+    company: {
+      id: string;
+      name: string;
+    } | null;
+    branchId: string | null;
+    branch: {
+      id: string;
+      fantasyName: string;
+      socialReason: string | null;
+      cnpj: string;
+      company: {
+        id: string;
+        name: string;
+      };
+    } | null;
   }
 
   interface Session {
@@ -15,6 +31,22 @@ declare module "next-auth" {
       name: string;
       email: string;
       profile: IUserProfile;
+      companyId: string | null;
+      company: {
+        id: string;
+        name: string;
+      } | null;
+      branchId: string | null;
+      branch: {
+        id: string;
+        fantasyName: string;
+        socialReason: string | null;
+        cnpj: string;
+        company: {
+          id: string;
+          name: string;
+        };
+      } | null;
     } & DefaultSession["user"];
   }
 
@@ -23,5 +55,21 @@ declare module "next-auth" {
     name: string;
     email: string;
     profile: IUserProfile;
+    companyId: string | null;
+    company: {
+      id: string;
+      name: string;
+    } | null;
+    branchId: string | null;
+    branch: {
+      id: string;
+      fantasyName: string;
+      socialReason: string | null;
+      cnpj: string;
+      company: {
+        id: string;
+        name: string;
+      };
+    } | null;
   }
 }
