@@ -51,6 +51,9 @@ export const columns: ColumnDef<IUser>[] = [
   {
     id: "access",
     header: "Acessos",
+    meta: {
+      cellClassName: "h-16",
+    },
     cell: ({ row: { original: user } }) => {
       if (user.profile === IUserProfile.ADMIN) {
         return (
