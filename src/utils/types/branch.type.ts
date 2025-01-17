@@ -1,3 +1,5 @@
+import { ICompany } from "./company.type";
+
 export interface IBranch {
   id: string;
   code?: string;
@@ -5,4 +7,5 @@ export interface IBranch {
   socialReason?: string;
   cnpj: string;
   companyId: string;
+  company: Pick<ICompany, "id" | "name">;
 }

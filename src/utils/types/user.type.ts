@@ -1,9 +1,19 @@
+import { IBranch } from "./branch.type";
+import { ICompany } from "./company.type";
+
 export interface IUser {
   id: string;
   name?: string;
   email: string;
   profile: IUserProfile;
   status: boolean;
+  companyId: string | null;
+  company: Pick<ICompany, "id" | "name"> | null;
+  branchId: string | null;
+  branch: Pick<
+    IBranch,
+    "id" | "fantasyName" | "socialReason" | "cnpj" | "companyId" | "company"
+  > | null;
 }
 
 export enum IUserProfile {

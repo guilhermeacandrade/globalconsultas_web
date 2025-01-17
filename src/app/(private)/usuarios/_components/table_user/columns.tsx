@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Circle, Crown, Edit2, MoreHorizontal, User } from "lucide-react";
 import { DialogUser } from "../dialog_user";
+import { use } from "react";
 
 export const columns: ColumnDef<IUser>[] = [
   {
@@ -45,6 +46,48 @@ export const columns: ColumnDef<IUser>[] = [
   {
     accessorKey: "email",
     header: "E-mail",
+  },
+
+  {
+    id: "access",
+    header: "Acessos",
+    cell: ({ row: { original: user } }) => {
+      if (user.profile === IUserProfile.ADMIN) {
+        return (
+          <div className="bg-muted px-3 py-1 text-xs rounded-xl w-fit">
+            Acesso Total
+          </div>
+        );
+      }
+
+      if (user.profile === IUserProfile.COMPANY) {
+        return (
+          <div className="bg-muted px-3 py-1 text-xs rounded-xl w-fit flex flex-col">
+            <span className="font-semibold text-[0.60rem]">Empresa</span>
+            <span className="">{user.company?.name}</span>
+          </div>
+        );
+      }
+
+      if (user.profile === IUserProfile.RH) {
+        return (
+          <div className="bg-muted px-3 py-1 text-xs rounded-xl w-fit flex flex-col">
+            <span className="font-semibold text-[0.60rem]">
+              Filial {user.branch?.company.name}
+            </span>
+            <span className="">{user.branch?.fantasyName}</span>
+          </div>
+        );
+      }
+
+      if (user.profile === IUserProfile.INVESTIGATOR) {
+        return (
+          <div className="bg-muted px-3 py-1 text-xs rounded-xl w-fit">
+            Suas Consultas Atribuídas
+          </div>
+        );
+      }
+    },
   },
 
   {
