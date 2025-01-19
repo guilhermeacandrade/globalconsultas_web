@@ -29,10 +29,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             email: email,
             password: password,
           });
-          console.log("🚀 ~ authorize ~ response:", response);
+          // console.log("🚀 ~ authorize ~ response:", response);
 
           const user = response.data.data;
-          console.log("🚀 ~ authorize ~ user:", user);
+          // console.log("🚀 ~ authorize ~ user:", user);
 
           if (!user) return null;
 

@@ -7,7 +7,7 @@ export default auth((req) => {
   }
 
   if (req.nextUrl.pathname === "/" && req.auth.user.profile === "COMPANY") {
-    console.log(`/dashboard/c/${req.auth.user.companyId}`);
+    // console.log(`/dashboard/c/${req.auth.user.companyId}`);
     const newUrl = new URL(
       `/dashboard/c/${req.auth.user.companyId}`,
       req.nextUrl.origin
