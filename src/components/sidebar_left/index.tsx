@@ -30,69 +30,77 @@ import { usePathname } from "next/navigation";
 import { IUserProfile } from "@/utils/types/user.type";
 import { useSession } from "next-auth/react";
 
-const menus = [
-  {
-    label: "Painel",
-    href: "/",
-    icon: <LayoutDashboard className="" />,
-    pathName: "/",
-    allowedProfiles: [
-      IUserProfile.ADMIN,
-      IUserProfile.COMPANY,
-      IUserProfile.INVESTIGATOR,
-    ],
-  },
-  {
-    label: "Usuários",
-    href: "/usuarios",
-    icon: <User2 />,
-    pathName: "/usuarios",
-    allowedProfiles: [IUserProfile.ADMIN],
-  },
-  {
-    label: "Empresas",
-    href: "/empresas",
-    icon: <Hotel />,
-    pathName: "/empresas",
-    allowedProfiles: [IUserProfile.ADMIN],
-  },
-  {
-    label: "Filiais",
-    href: "/filiais",
-    icon: <Building2 />,
-    pathName: "/filiais",
-    allowedProfiles: [IUserProfile.ADMIN],
-  },
-  {
-    label: "Candidatos",
-    href: "/candidatos",
-    icon: <UsersRound />,
-    pathName: "/candidatos",
-    allowedProfiles: [
-      IUserProfile.ADMIN,
-      IUserProfile.COMPANY,
-      IUserProfile.RH,
-    ],
-  },
-  {
-    label: "Consultas",
-    href: "/consultas",
-    icon: <FileSearch />,
-    pathName: "/consultas",
-    allowedProfiles: [
-      IUserProfile.ADMIN,
-      IUserProfile.COMPANY,
-      IUserProfile.INVESTIGATOR,
-      IUserProfile.RH,
-    ],
-  },
-];
-
 export function SidebarLeft() {
   const { data: session } = useSession();
   const { open, isMobile } = useSidebar();
   const pathname = usePathname();
   // const status: string = "authenticated";
+
+  const menus = [
+    {
+      label: "Painel",
+      href: `/${
+        session?.user.profile === IUserProfile.COMPANY
+          ? `dashboard/c/${session.user.companyId}`
+          : ""
+      }`,
+      icon: <LayoutDashboard className="" />,
+      pathName: `/${
+        session?.user.profile === IUserProfile.COMPANY
+          ? `dashboard/c/${session.user.companyId}`
+          : ""
+      }`,
+      allowedProfiles: [
+        IUserProfile.ADMIN,
+        IUserProfile.COMPANY,
+        IUserProfile.INVESTIGATOR,
+      ],
+    },
+    {
+      label: "Usuários",
+      href: "/usuarios",
+      icon: <User2 />,
+      pathName: "/usuarios",
+      allowedProfiles: [IUserProfile.ADMIN],
+    },
+    {
+      label: "Empresas",
+      href: "/empresas",
+      icon: <Hotel />,
+      pathName: "/empresas",
+      allowedProfiles: [IUserProfile.ADMIN],
+    },
+    {
+      label: "Filiais",
+      href: "/filiais",
+      icon: <Building2 />,
+      pathName: "/filiais",
+      allowedProfiles: [IUserProfile.ADMIN],
+    },
+    {
+      label: "Candidatos",
+      href: "/candidatos",
+      icon: <UsersRound />,
+      pathName: "/candidatos",
+      allowedProfiles: [
+        IUserProfile.ADMIN,
+        IUserProfile.COMPANY,
+        IUserProfile.RH,
+      ],
+    },
+    {
+      label: "Consultas",
+      href: "/consultas",
+      icon: <FileSearch />,
+      pathName: "/consultas",
+      allowedProfiles: [
+        IUserProfile.ADMIN,
+        IUserProfile.COMPANY,
+        IUserProfile.INVESTIGATOR,
+        IUserProfile.RH,
+      ],
+    },
+  ];
 
   return (
     <Sidebar collapsible="icon" className="z-50">
@@ -120,6 +128,9 @@ export function SidebarLeft() {
           <SidebarGroupContent>
             <SidebarMenu className="gap-2">
               {menus.map((menu, idx) => {
+                if (!menu.allowedProfiles.includes(session?.user.profile))
+                  return null;
+
                 return (
                   <SidebarMenuItem key={idx}>
                     {/* {status === "loading" ? (
@@ -132,12 +143,7 @@ export function SidebarLeft() {
                         "py-6 transition-all duration-300",
                         pathname === menu.pathName
                           ? "bg-background text-primary hover:bg-background hover:text-primary font-bold shadow-md"
-                          : "hover:bg-primary hover:text-sidebar-accent",
-                        {
-                          hidden: !menu.allowedProfiles.includes(
-                            session?.user.profile
-                          ),
-                        }
+                          : "hover:bg-primary hover:text-sidebar-accent"
                       )}
                     >
                       <Link href={menu.href}>
