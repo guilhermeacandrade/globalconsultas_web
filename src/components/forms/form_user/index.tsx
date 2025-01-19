@@ -188,7 +188,7 @@ export function FormUser({ closeModal, editUser }: IFormUserProps) {
     const fetchCompanies = async () => {
       try {
         const resp = await api.get("/company");
-        const respData: ICompany[] = resp.data.data;
+        const respData: ICompany[] = await resp.data.data;
 
         setListCompanies(respData);
       } catch (error) {
@@ -199,7 +199,7 @@ export function FormUser({ closeModal, editUser }: IFormUserProps) {
     const fetchBranches = async () => {
       try {
         const resp = await api.get("/branch");
-        const respData: IBranch[] = resp.data.data;
+        const respData: IBranch[] = await resp.data.data;
 
         setListBranches(respData);
       } catch (error) {

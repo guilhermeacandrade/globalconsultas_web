@@ -135,7 +135,7 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
     const fetchCompanies = async () => {
       try {
         const resp = await api.get("/company");
-        const respData: ICompany[] = resp.data.data;
+        const respData: ICompany[] = await resp.data.data;
 
         setListCompanies(respData);
       } catch (error) {
