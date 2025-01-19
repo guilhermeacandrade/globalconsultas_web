@@ -134,6 +134,11 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
+        console.log(
+          "🚀 ~ fetchCompanies ~ config api baseUrl:",
+          process.env.NEXT_PUBLIC_API_URL
+        );
+
         const resp = await api.get("/company");
         const respData: ICompany[] = await resp.data.data;
 
