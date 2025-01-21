@@ -28,6 +28,20 @@ export const columns: ColumnDef<IBranch>[] = [
   },
 
   {
+    accessorKey: "city",
+    header: "Cidade",
+    cell: ({ row: { original: branch } }) => {
+      if (!branch.city) return null;
+
+      return (
+        <span>
+          {branch.city} ({branch.uf})
+        </span>
+      );
+    },
+  },
+
+  {
     id: "actions",
     meta: {
       headerClassName: "w-12",

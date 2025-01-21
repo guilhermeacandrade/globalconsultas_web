@@ -12,7 +12,14 @@ export interface IUser {
   branchId: string | null;
   branch: Pick<
     IBranch,
-    "id" | "fantasyName" | "socialReason" | "cnpj" | "companyId" | "company"
+    | "id"
+    | "fantasyName"
+    | "socialReason"
+    | "cnpj"
+    | "companyId"
+    | "company"
+    | "city"
+    | "uf"
   > | null;
 }
 
@@ -20,14 +27,14 @@ export enum IUserProfile {
   ADMIN = "ADMIN",
   INVESTIGATOR = "INVESTIGATOR",
   COMPANY = "COMPANY",
-  RH = "RH",
+  BRANCH = "BRANCH",
 }
 
 export const PROFILE_LABELS = {
   ADMIN: "Administrador",
   INVESTIGATOR: "Consultor",
   COMPANY: "Empresa",
-  RH: "RH",
+  BRANCH: "Filial",
 };
 
 export const PROFILE_OPTIONS = [
@@ -44,7 +51,7 @@ export const PROFILE_OPTIONS = [
     label: PROFILE_LABELS[IUserProfile.INVESTIGATOR],
   },
   {
-    value: IUserProfile.RH,
-    label: PROFILE_LABELS[IUserProfile.RH],
+    value: IUserProfile.BRANCH,
+    label: PROFILE_LABELS[IUserProfile.BRANCH],
   },
 ];

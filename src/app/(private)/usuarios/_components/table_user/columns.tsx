@@ -52,12 +52,12 @@ export const columns: ColumnDef<IUser>[] = [
     id: "access",
     header: "Acessos",
     meta: {
-      cellClassName: "h-16",
+      cellClassName: "h-20",
     },
     cell: ({ row: { original: user } }) => {
       if (user.profile === IUserProfile.ADMIN) {
         return (
-          <div className="bg-muted px-3 py-1 text-xs rounded-xl w-fit">
+          <div className="bg-muted px-3 py-1 text-xs rounded-xl w-fit ">
             Acesso Total
           </div>
         );
@@ -72,13 +72,18 @@ export const columns: ColumnDef<IUser>[] = [
         );
       }
 
-      if (user.profile === IUserProfile.RH) {
+      if (user.profile === IUserProfile.BRANCH) {
         return (
           <div className="bg-muted px-3 py-1 text-xs rounded-xl w-fit flex flex-col">
-            <span className="font-semibold text-[0.60rem]">
+            <span className="font-semibold text-[0.60rem] text-gray-600">
               Filial {user.branch?.company.name}
             </span>
             <span className="">{user.branch?.fantasyName}</span>
+            {user.branch?.city && (
+              <span className="font-normal text-[0.55rem] text-gray-600">
+                {user.branch?.city} ({user.branch?.uf})
+              </span>
+            )}
           </div>
         );
       }

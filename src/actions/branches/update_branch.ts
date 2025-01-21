@@ -18,6 +18,8 @@ export async function updateBranch(params: UpdateBranchProps) {
     fantasyName: params.fantasyName,
     socialReason: params.socialReason,
     cnpj: params.cnpj ? removerFormat(params.cnpj) : null,
+    city: params.city,
+    uf: params.uf?.toUpperCase(),
     companyId: params.companyId,
   });
 

@@ -93,7 +93,7 @@ const createSchema = (edit: boolean) =>
         });
       }
 
-      if (data.profile === IUserProfile.RH && !data.branchId) {
+      if (data.profile === IUserProfile.BRANCH && !data.branchId) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "Obrigatório",
@@ -378,7 +378,7 @@ export function FormUser({ closeModal, editUser }: IFormUserProps) {
               />
             )}
 
-            {watchProfileValue === IUserProfile.RH && (
+            {watchProfileValue === IUserProfile.BRANCH && (
               <FormField
                 control={form.control}
                 name="branchId"

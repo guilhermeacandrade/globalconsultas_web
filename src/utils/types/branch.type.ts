@@ -6,6 +6,8 @@ export interface IBranch {
   fantasyName: string;
   socialReason?: string;
   cnpj: string;
+  city?: string;
+  uf?: string;
   companyId: string;
   company: Pick<ICompany, "id" | "name">;
 }

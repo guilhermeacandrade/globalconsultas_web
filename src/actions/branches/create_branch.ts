@@ -12,6 +12,8 @@ export async function createBranch(params: TFormBranchData) {
     companyId: params.companyId,
     fantasyName: params.fantasyName,
     socialReason: params.socialReason,
+    city: params.city,
+    uf: params.uf?.toUpperCase(),
     cnpj: params.cnpj ? removerFormat(params.cnpj) : null,
   });
 

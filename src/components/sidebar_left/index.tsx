@@ -85,7 +85,7 @@ export function SidebarLeft() {
       allowedProfiles: [
         IUserProfile.ADMIN,
         IUserProfile.COMPANY,
-        IUserProfile.RH,
+        IUserProfile.BRANCH,
       ],
     },
     {
@@ -97,7 +97,7 @@ export function SidebarLeft() {
         IUserProfile.ADMIN,
         IUserProfile.COMPANY,
         IUserProfile.INVESTIGATOR,
-        IUserProfile.RH,
+        IUserProfile.BRANCH,
       ],
     },
   ];

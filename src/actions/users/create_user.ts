@@ -16,7 +16,7 @@ export async function createUser(params: TFormUserData) {
     status: params.status,
     companyId:
       params.profile === IUserProfile.COMPANY ? params.companyId : null,
-    branchId: params.profile === IUserProfile.RH ? params.branchId : null,
+    branchId: params.profile === IUserProfile.BRANCH ? params.branchId : null,
   });
 
   // console.log(resp);

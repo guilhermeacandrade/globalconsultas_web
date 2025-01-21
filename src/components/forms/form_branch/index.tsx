@@ -56,6 +56,8 @@ const schema = z.object({
     .min(1, "Obrigatório."),
   socialReason: z.string({ required_error: "Obrigatório." }).optional(),
   cnpj: z.string({ required_error: "Obrigatório." }).min(1, "Obrigatório."),
+  city: z.string().optional(),
+  uf: z.string().optional(),
   companyId: z
     .string({ required_error: "Obrigatório." })
     .refine((value) => value !== "", { message: "Obrigatório." }),
@@ -77,6 +79,8 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
       fantasyName: editBranch?.fantasyName || "",
       socialReason: editBranch?.socialReason || "",
       cnpj: editBranch ? formatCNPJ(editBranch.cnpj) : "",
+      city: editBranch?.city || "",
+      uf: editBranch?.uf || "",
       companyId: editBranch?.companyId || "",
     },
   });
@@ -284,6 +288,45 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
                 </FormItem>
               )}
             />
+
+            <div className="flex gap-2">
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Cidade</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder=""
+                        className="focus-visible:ring-primary"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="mt-1 px-2 text-xs" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="uf"
+                render={({ field }) => (
+                  <FormItem className="max-w-12">
+                    <FormLabel>UF</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder=""
+                        className="uppercase focus-visible:ring-primary"
+                        maxLength={2}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="mt-1 px-2 text-xs" />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             {form.formState.errors.root && (
               <p className="mt-1 text-center text-xs text-destructive">
