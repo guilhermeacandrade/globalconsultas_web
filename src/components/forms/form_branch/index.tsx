@@ -56,7 +56,9 @@ const schema = z.object({
     .min(1, "Obrigatório."),
   socialReason: z.string({ required_error: "Obrigatório." }).optional(),
   cnpj: z.string({ required_error: "Obrigatório." }).min(1, "Obrigatório."),
-  companyId: z.string({ required_error: "Obrigatório." }),
+  companyId: z
+    .string({ required_error: "Obrigatório." })
+    .refine((value) => value !== "", { message: "Obrigatório." }),
 });
 export type TFormBranchData = z.infer<typeof schema>;
 
@@ -72,10 +74,10 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
   const form = useForm<TFormBranchData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      fantasyName: editBranch ? editBranch.fantasyName : "",
-      socialReason: editBranch ? editBranch.socialReason : "",
+      fantasyName: editBranch?.fantasyName || "",
+      socialReason: editBranch?.socialReason || "",
       cnpj: editBranch ? formatCNPJ(editBranch.cnpj) : "",
-      companyId: editBranch ? editBranch.companyId : "",
+      companyId: editBranch?.companyId || "",
     },
   });
 
@@ -220,7 +222,7 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
                       </Command>
                     </PopoverContent>
                   </Popover>
-                  {/* <FormMessage className="mt-1 px-2 text-xs" /> */}
+                  <FormMessage className="mt-1 px-2 text-xs" />
                 </FormItem>
               )}
             />
