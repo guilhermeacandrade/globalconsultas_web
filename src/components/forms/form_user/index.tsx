@@ -372,7 +372,7 @@ export function FormUser({ closeModal, editUser }: IFormUserProps) {
                         </Command>
                       </PopoverContent>
                     </Popover>
-                    {/* <FormMessage className="mt-1 px-2 text-xs" /> */}
+                    <FormMessage className="mt-1 px-2 text-xs" />
                   </FormItem>
                 )}
               />
@@ -445,7 +445,7 @@ export function FormUser({ closeModal, editUser }: IFormUserProps) {
                         </Command>
                       </PopoverContent>
                     </Popover>
-                    {/* <FormMessage className="mt-1 px-2 text-xs" /> */}
+                    <FormMessage className="mt-1 px-2 text-xs" />
                   </FormItem>
                 )}
               />
