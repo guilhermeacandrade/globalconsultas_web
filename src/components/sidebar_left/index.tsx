@@ -25,6 +25,7 @@ import {
   UsersRound,
   FileSearch,
   User2,
+  ShieldBan,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { IUserProfile } from "@/utils/types/user.type";
@@ -99,6 +100,13 @@ export function SidebarLeft() {
         IUserProfile.INVESTIGATOR,
         IUserProfile.BRANCH,
       ],
+    },
+    {
+      label: "Restrições",
+      href: "/restricoes",
+      icon: <ShieldBan />,
+      pathName: "/restricoes",
+      allowedProfiles: [IUserProfile.ADMIN, IUserProfile.INVESTIGATOR],
     },
   ];
 
