@@ -20,6 +20,10 @@ export function dateStringToDateUTC(dateStr: string) {
   return dateUTC;
 }
 
+export function removeFormat(value: string) {
+  return value.replace(/\D/g, ""); // Remove todos os não dígitos
+}
+
 export function formatCNPJ(value: string) {
   return value
     .replace(/\D/g, "") // Remove tudo que não é dígito
@@ -29,6 +33,12 @@ export function formatCNPJ(value: string) {
     .replace(/(\d{4})(\d)/, "$1-$2") // Adiciona hífen após o décimo segundo dígito
     .replace(/(-\d{2})\d+?$/, "$1"); // Limita a 14 caracteres (00.000.000/0000-00)
 }
-export function removerFormat(value: string) {
-  return value.replace(/\D/g, ""); // Remove todos os não dígitos
+
+export function formatPhoneNumber(value: string) {
+  return value
+    .replace(/\D/g, "") // Remove tudo que não é dígito
+    .replace(/^(\d{2})(\d)/, "($1) $2") // Adiciona parênteses ao DDD
+    .replace(/(\d{4})(\d{1,4})$/, "$1-$2") // Adiciona o hífen após 4 dígitos (para números intermediários)
+    .replace(/(\d{5})(\d{4})$/, "$1-$2") // Ajusta o hífen para números com 11 dígitos
+    .replace(/(-\d{4})\d+?$/, "$1"); // Limita a 11 dígitos no total
 }

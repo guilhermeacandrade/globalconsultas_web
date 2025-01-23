@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { IBranch } from "@/utils/types/branch.type";
-import { PlusCircle } from "lucide-react";
+
 import React, { useState } from "react";
 
 interface DialogBranchProps {
@@ -47,10 +47,10 @@ export function DialogBranch({
           <DialogTitle>{dialogTitle}</DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 overflow-auto mt-4">
-          <FormBranch closeModal={setDialogIsOpen} editBranch={editBranch} />
-          <ScrollBar />
-        </ScrollArea>
+        {/* <ScrollArea className="flex-1 overflow-auto"> */}
+        <FormBranch closeModal={setDialogIsOpen} editBranch={editBranch} />
+        {/* <ScrollBar /> */}
+        {/* </ScrollArea> */}
       </DialogContent>
     </Dialog>
   );
