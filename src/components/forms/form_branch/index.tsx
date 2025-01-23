@@ -208,6 +208,10 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
             ...data,
             id: editContact?.id as string,
             deleted: false,
+            contact:
+              data.type === IContactsTypes.EMAIL
+                ? data.contact
+                : removeFormat(data.contact),
           });
           setContactsList(newContactsList);
         } else {
@@ -219,7 +223,10 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
             {
               id: "new" + String(contactsList.length + 1),
               type: data.type,
-              contact: data.contact,
+              contact:
+                data.type === IContactsTypes.EMAIL
+                  ? data.contact
+                  : removeFormat(data.contact),
               responsibleName: data.responsibleName,
               deleted: false,
             },
@@ -270,7 +277,12 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
     console.log("🚀 ~ handleEdit ~ data:", data);
 
     formContact.setValue("type", data.type);
-    formContact.setValue("contact", data.contact);
+    formContact.setValue(
+      "contact",
+      data.type === IContactsTypes.EMAIL
+        ? data.contact
+        : formatPhoneNumber(data.contact)
+    );
     formContact.setValue("responsibleName", data.responsibleName);
 
     setEditContact(data);
@@ -786,7 +798,11 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
                                 <span className="px-2 shadow rounded-full ">
                                   {CONTACTS_TYPES_LABELS[v.type]}
                                 </span>
-                                <span>{v.contact}</span>
+                                <span>
+                                  {v.type === IContactsTypes.EMAIL
+                                    ? v.contact
+                                    : formatPhoneNumber(v.contact)}
+                                </span>
                               </div>
                             </div>
 
