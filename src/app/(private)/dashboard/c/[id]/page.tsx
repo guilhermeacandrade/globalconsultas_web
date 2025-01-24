@@ -16,7 +16,7 @@ export default function DashboardCompanyPage() {
       const res = await api.get(`/company/${idCompany}`);
       const resCompany = await res.data.data;
 
-      console.log("🚀 ~ getDataCompany ~ resCompany:", resCompany);
+      // console.log("🚀 ~ getDataCompany ~ resCompany:", resCompany);
       setCompany(res.data.data);
 
       if (resCompany.imageLogoUrl) {
@@ -27,11 +27,10 @@ export default function DashboardCompanyPage() {
     };
 
     const { id } = params;
-    console.log("🚀 ~ useEffect ~ id:", id);
     if (id) {
       getDataCompany(id as string);
     }
-  }, []);
+  }, [params]);
 
   // console.log("🚀 ~ PanelDynamicPage ~ params:", params);
 
