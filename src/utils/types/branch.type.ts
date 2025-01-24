@@ -10,7 +10,7 @@ export interface IBranch {
   uf?: string;
   responsibleName?: string;
   companyId: string;
-  company: Pick<ICompany, "id" | "name">;
+  company: Pick<ICompany, "id" | "name" | "imageLogoUrl">;
   contacts: IContacts[] | [];
 }
 

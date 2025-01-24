@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/tooltip";
 import { Edit2, MoreHorizontal } from "lucide-react";
 import { DialogCompany } from "../dialog_company";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const columns: ColumnDef<ICompany>[] = [
   {
@@ -55,7 +57,7 @@ export const columns: ColumnDef<ICompany>[] = [
           <DropdownMenu>
             <Tooltip>
               <TooltipTrigger asChild>
-                <DropdownMenuTrigger className="rounded-full p-2 hover:bg-muted hidden">
+                <DropdownMenuTrigger className="rounded-full p-2 hover:bg-muted">
                   <MoreHorizontal size={12} />
                 </DropdownMenuTrigger>
               </TooltipTrigger>
@@ -65,13 +67,10 @@ export const columns: ColumnDef<ICompany>[] = [
             </Tooltip>
 
             <DropdownMenuContent side="bottom" align="end">
-              <DropdownMenuItem
-                className={cn(
-                  "focus:bg-gradient-to-r focus:from-primary focus:to-primary/70 focus:text-sidebar-accent",
-                  "text-xs"
-                )}
-              >
-                menu 1
+              <DropdownMenuItem className={cn("text-xs  hover:bg-muted")}>
+                <Link href={`/dashboard/c/${company.id}`}>
+                  Dashboard Empresa
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

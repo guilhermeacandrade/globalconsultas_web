@@ -15,12 +15,20 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dispatch, SetStateAction, useTransition } from "react";
-import { CheckCheck, CircleX, LoaderCircle } from "lucide-react";
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
+import { CheckCheck, CircleX, LoaderCircle, Upload } from "lucide-react";
 import { createCompany, updateCompany } from "@/actions/companies";
 import { toast } from "@/hooks/use-toast";
 import { durationToast } from "@/lib/utils";
 import { ICompany } from "@/utils/types/company.type";
+import UploadImage from "@/components/upload_image";
+import { uploadFile } from "@/lib/upload_file";
 
 const schema = z.object({
   name: z.string({ required_error: "Obrigatório." }).min(1, "Obrigatório."),
@@ -34,6 +42,8 @@ interface IFormCompanyProps {
 
 export function FormCompany({ editCompany, closeModal }: IFormCompanyProps) {
   const [isPending, startTransition] = useTransition();
+  const [file, setFile] = useState<File | null>(null);
+  const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
 
   const form = useForm<TFormCompanyData>({
     resolver: zodResolver(schema),
@@ -45,15 +55,34 @@ export function FormCompany({ editCompany, closeModal }: IFormCompanyProps) {
   async function handleSend(data: TFormCompanyData) {
     startTransition(async () => {
       try {
+        let uploaded: string | null = null;
+
         if (editCompany) {
+          if (file) {
+            uploaded = await uploadFile({ file, name: editCompany.id });
+          }
+
           // update
           const company = await updateCompany({
             ...data,
             id: editCompany.id,
+            imageLogoUrl: uploaded,
           });
         } else {
           // create
-          const company = await createCompany(data);
+          const company = await createCompany({
+            ...data,
+            imageLogoUrl: null,
+          });
+
+          if (file) {
+            uploaded = await uploadFile({ file, name: company.id });
+            await updateCompany({
+              ...data,
+              id: company.id,
+              imageLogoUrl: uploaded,
+            });
+          }
 
           form.reset();
         }
@@ -94,6 +123,14 @@ export function FormCompany({ editCompany, closeModal }: IFormCompanyProps) {
     });
   }
 
+  useEffect(() => {
+    if (editCompany && editCompany.imageLogoUrl) {
+      setUploadedUrl(
+        `${process.env.NEXT_PUBLIC_API_URL}${editCompany.imageLogoUrl}`
+      );
+    }
+  }, [editCompany]);
+
   return (
     <div className="px-1">
       <Form {...form}>
@@ -102,6 +139,13 @@ export function FormCompany({ editCompany, closeModal }: IFormCompanyProps) {
           className="flex h-full flex-col pb-4"
         >
           <div className="flex flex-grow flex-col justify-center gap-2 ">
+            <UploadImage
+              file={file}
+              setFile={setFile}
+              uploadedUrl={uploadedUrl}
+              setUploadedUrl={setUploadedUrl}
+            />
+
             <FormField
               control={form.control}
               name="name"

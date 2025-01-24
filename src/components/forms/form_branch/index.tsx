@@ -844,8 +844,7 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
                                 <DropdownMenuContent side="bottom" align="end">
                                   <DropdownMenuItem
                                     className={cn(
-                                      "focus:bg-gradient-to-r focus:from-primary focus:to-primary/70 focus:text-sidebar-accent",
-                                      "text-xs text-destructive"
+                                      "text-xs text-destructive hover:bg-muted"
                                     )}
                                   >
                                     <button
