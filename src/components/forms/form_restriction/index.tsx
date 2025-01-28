@@ -144,7 +144,7 @@ export function FormRestriction({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex h-full flex-col pb-4"
+          className="flex h-full flex-col pb-4 px-1"
         >
           <div className="flex flex-grow flex-col justify-center gap-2 ">
             <FormField

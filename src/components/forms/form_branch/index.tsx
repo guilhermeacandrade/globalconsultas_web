@@ -342,7 +342,7 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(handleSend)}
-                className="flex h-full flex-col pb-4"
+                className="flex h-full flex-col pb-4 px-1"
               >
                 <div className="flex flex-grow flex-col justify-center gap-2 ">
                   <FormField
@@ -581,7 +581,7 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
               <Form {...formContact}>
                 <form
                   onSubmit={formContact.handleSubmit(handleSendContacts)}
-                  className="flex-grow flex h-full flex-col justify-between"
+                  className="flex-grow flex h-full flex-col justify-between px-1"
                 >
                   <div className="flex flex-col gap-2 ">
                     <div>
