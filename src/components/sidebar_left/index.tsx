@@ -78,17 +78,17 @@ export function SidebarLeft() {
       pathName: "/filiais",
       allowedProfiles: [IUserProfile.ADMIN],
     },
-    {
-      label: "Candidatos",
-      href: "/candidatos",
-      icon: <UsersRound />,
-      pathName: "/candidatos",
-      allowedProfiles: [
-        IUserProfile.ADMIN,
-        IUserProfile.COMPANY,
-        IUserProfile.BRANCH,
-      ],
-    },
+    // {
+    //   label: "Candidatos",
+    //   href: "/candidatos",
+    //   icon: <UsersRound />,
+    //   pathName: "/candidatos",
+    //   allowedProfiles: [
+    //     IUserProfile.ADMIN,
+    //     IUserProfile.COMPANY,
+    //     IUserProfile.BRANCH,
+    //   ],
+    // },
     {
       label: "Consultas",
       href: "/consultas",
