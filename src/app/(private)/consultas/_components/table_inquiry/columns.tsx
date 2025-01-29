@@ -31,26 +31,30 @@ import {
   ShieldCheck,
   ShieldEllipsis,
   User,
+  UserRoundSearch,
 } from "lucide-react";
 import { DialogInquiry } from "../dialog_inquiry";
+import { BadgeResultInquiry } from "../badge_result_inquiry";
 
 export const columns: ColumnDef<IInquiry>[] = [
   {
     accessorKey: "code",
     header: "Código",
     meta: {
-      headerClassName: "w-40 ",
+      headerClassName: "text-xs",
     },
     cell: ({ row: { original: inquiry } }) => {
       const requestDateISO = new Date(inquiry.requestDate);
 
       return (
-        <span>
-          {requestDateISO.getUTCFullYear()}
-          {String(requestDateISO.getUTCMonth() + 1).padStart(2, "0")}
-          {String(requestDateISO.getUTCDate()).padStart(2, "0")}-
-          {String(inquiry.code).padStart(6, "0")}
-        </span>
+        <div className="w-20 max-w-20 text-xs text-center">
+          <span className="">
+            {requestDateISO.getUTCFullYear()}
+            {String(requestDateISO.getUTCMonth() + 1).padStart(2, "0")}
+            {String(requestDateISO.getUTCDate()).padStart(2, "0")}-
+            {String(inquiry.code).padStart(6, "0")}
+          </span>
+        </div>
       );
     },
   },
@@ -58,7 +62,7 @@ export const columns: ColumnDef<IInquiry>[] = [
     accessorKey: "requestDate",
     header: "Data da Solicitação",
     meta: {
-      headerClassName: "w-48",
+      headerClassName: "w-20 text-xs",
     },
     cell: ({ row: { original: inquiry } }) => {
       const requestDateISO = new Date(inquiry.requestDate);
@@ -69,13 +73,15 @@ export const columns: ColumnDef<IInquiry>[] = [
       );
 
       return (
-        <span>
-          {new Date(requestDate).toLocaleDateString("pt-BR", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          })}
-        </span>
+        <div className="flex">
+          <span className="text-xs text-center">
+            {new Date(requestDate).toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })}
+          </span>
+        </div>
       );
     },
   },
@@ -84,8 +90,11 @@ export const columns: ColumnDef<IInquiry>[] = [
     // accessorKey: "",
     id: "name",
     header: "Candidato",
+    meta: {
+      headerClassName: "text-xs",
+    },
     cell: ({ row: { original: inquiry } }) => {
-      return <div className="">{inquiry.person.name}</div>;
+      return <div className="text-xs">{inquiry.person.name}</div>;
     },
   },
 
@@ -93,9 +102,33 @@ export const columns: ColumnDef<IInquiry>[] = [
     // accessorKey: "",
     id: "filial",
     header: "Filial",
-
+    meta: {
+      headerClassName: "text-xs",
+      cellClassName: "h-16",
+    },
     cell: ({ row: { original: inquiry } }) => {
-      return <div className="">{inquiry.person.branch.fantasyName}</div>;
+      return <div className="text-xs">{inquiry.person.branch.fantasyName}</div>;
+    },
+  },
+
+  {
+    accessorKey: "investigator",
+    // id: "filial",
+    header: "Consultor",
+    meta: {
+      headerClassName: "w-40 text-xs  flex justify-center items-center",
+    },
+    cell: ({ row: { original: inquiry } }) => {
+      if (!inquiry.investigator) return null;
+
+      return (
+        <div className="flex items-center justify-center text-xs gap-1 w-full max-w-40 bg-muted rounded-full px-4 py-1">
+          <UserRoundSearch size={16} />
+          <span className="text-ellipsis overflow-hidden">
+            {inquiry.investigator?.name}
+          </span>
+        </div>
+      );
     },
   },
 
@@ -119,54 +152,26 @@ export const columns: ColumnDef<IInquiry>[] = [
     accessorKey: "result",
     header: "Resultado",
     meta: {
-      headerClassName: "w-36",
+      headerClassName: "w-36 text-xs",
     },
     cell: ({ row: { original: inquiry } }) => {
-      return (
-        <div
-          className={cn(
-            "flex w-full  max-w-32 items-center justify-center px-2 py-0 gap-2 text-xs rounded-xl bg-amber-300/40 text-amber-600",
-            {
-              "bg-green-500/10 text-green-500":
-                inquiry.result === IResultInquiries.APPROVED,
-            },
-            {
-              "bg-red-500/10 text-red-500":
-                inquiry.result === IResultInquiries.REJECTED,
-            }
-          )}
-        >
-          <div className="">
-            {inquiry.result === IResultInquiries.APPROVED && (
-              <ShieldCheck size={12} />
-            )}
-            {inquiry.result === IResultInquiries.REJECTED && (
-              <ShieldBan size={12} />
-            )}
-            {inquiry.result !== IResultInquiries.APPROVED &&
-              inquiry.result !== IResultInquiries.REJECTED && (
-                <ShieldEllipsis size={12} />
-              )}
-          </div>
-
-          <span className="f">
-            {inquiry.result
-              ? RESULT_INQUIRY_LABELS[inquiry.result]
-              : "Aguardando"}
-          </span>
-        </div>
-      );
+      return BadgeResultInquiry({
+        inquiryResult: inquiry.result,
+        inquiryInvestigator: !!inquiry.investigatorId,
+      });
     },
   },
 
   {
     id: "actions",
     meta: {
-      headerClassName: "w-12",
+      headerClassName: "w-12 text-xs",
     },
     cell: ({ row: { original: inquiry } }) => {
       return (
         <div className="flex items-center gap-2 justify-end">
+          {/* {!inquiry.investigatorId && !inquiry.result && (
+          )} */}
           <DialogInquiry
             trigger={
               <button className="flex items-center gap-2">

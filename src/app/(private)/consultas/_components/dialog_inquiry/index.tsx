@@ -2,6 +2,7 @@
 
 "use client";
 
+import { FormInquiry } from "@/components/forms/form_inquiry";
 import {
   Dialog,
   DialogContent,
@@ -46,7 +47,7 @@ export function DialogInquiry({
         </DialogHeader>
 
         <ScrollArea className="flex-1 overflow-auto mt-4">
-          {/* <FormInquiry closeModal={setDialogIsOpen} editInquiry={editInquiry} /> */}
+          <FormInquiry closeModal={setDialogIsOpen} editInquiry={editInquiry} />
           <ScrollBar />
         </ScrollArea>
       </DialogContent>
