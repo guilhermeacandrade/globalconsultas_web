@@ -1,6 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { string } from "zod";
 
 export const durationToast: number = 2000;
 
@@ -83,4 +82,19 @@ export function formatDate(value: string | Date) {
     .replace(/^(\d{2})(\d)/, "$1/$2") // Adiciona a barra após o segundo dígito (dia)
     .replace(/^(\d{2}\/\d{2})(\d)/, "$1/$2") // Adiciona a barra após o quinto dígito (mês)
     .slice(0, 10); // Limita o tamanho para "DD/MM/AAAA"
+}
+
+export function getInquiryCode(data: {
+  requestDate: Date;
+  code: number;
+}): string {
+  const requestDateISO = new Date(data.requestDate);
+
+  const inquiryCode: string = `${String(
+    requestDateISO.getUTCFullYear()
+  )}${String(requestDateISO.getUTCMonth() + 1).padStart(2, "0")}${String(
+    requestDateISO.getUTCDate()
+  ).padStart(2, "0")}-${String(data.code).padStart(6, "0")}`;
+
+  return inquiryCode;
 }

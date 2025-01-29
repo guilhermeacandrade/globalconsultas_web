@@ -2,8 +2,6 @@
 
 "use client";
 
-import { revalidatePage } from "@/actions/actions";
-import { FormInquiry } from "@/components/forms/form_inquiry";
 import {
   Dialog,
   DialogContent,
@@ -13,20 +11,24 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { IInquiry } from "@/utils/types/inquiry.type";
+import { IUser } from "@/utils/types/user.type";
+import { UserRoundSearch } from "lucide-react";
 import React, { useState } from "react";
+import { FormSetInvestigator } from "./form_set_investigator";
 
-interface DialogInquiryProps {
-  editInquiry?: IInquiry;
-  trigger: React.ReactNode;
-  dialogTitle?: string;
+interface DialogSetInvestigatorProps {
+  editInquiry: IInquiry;
 }
 
-export function DialogInquiry({
-  trigger,
-  dialogTitle,
+export function DialogSetInvestigator({
   editInquiry,
-}: DialogInquiryProps) {
+}: DialogSetInvestigatorProps) {
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
   return (
@@ -34,10 +36,20 @@ export function DialogInquiry({
       open={dialogIsOpen}
       onOpenChange={(isOpen) => {
         setDialogIsOpen(isOpen);
-        if (!isOpen) revalidatePage("/consultas");
       }}
     >
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogTrigger asChild>
+        <button className="flex items-center gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <UserRoundSearch size={14} />
+            </TooltipTrigger>
+            <TooltipContent side="top">
+              <p className="text-xs">Enviar p/ Consultor</p>
+            </TooltipContent>
+          </Tooltip>
+        </button>
+      </DialogTrigger>
 
       <DialogContent
         className="my-auto flex max-h-[calc(100svh-48px)] flex-col"
@@ -45,11 +57,11 @@ export function DialogInquiry({
         onEscapeKeyDown={(e) => e.preventDefault()} // Não fechar o dialog ao apertar a tecla ESC
       >
         <DialogHeader>
-          <DialogTitle>{dialogTitle}</DialogTitle>
+          <DialogTitle>Enviar consulta pra Consultor</DialogTitle>
         </DialogHeader>
 
         <ScrollArea className="flex-1 overflow-auto mt-4">
-          <FormInquiry closeModal={setDialogIsOpen} editInquiry={editInquiry} />
+          <FormSetInvestigator editInquiry={editInquiry} />
           <ScrollBar />
         </ScrollArea>
       </DialogContent>

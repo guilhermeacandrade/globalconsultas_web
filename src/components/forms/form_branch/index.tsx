@@ -274,7 +274,7 @@ export function FormBranch({ editBranch, closeModal }: IFormBranchProps) {
   }
 
   function handleEdit(data: IContacts) {
-    console.log("🚀 ~ handleEdit ~ data:", data);
+    // console.log("🚀 ~ handleEdit ~ data:", data);
 
     formContact.setValue("type", data.type);
     formContact.setValue(

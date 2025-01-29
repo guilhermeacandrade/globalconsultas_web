@@ -5,6 +5,7 @@ export interface IInquiry {
   code: number;
   requestDate: Date;
   endDate: Date | null;
+  adminApprovalDate: Date | null;
   personId: string;
   result: IResultInquiries | null;
   observation: string | null;
@@ -31,21 +32,21 @@ export interface IInquiry {
     email: string;
   } | null;
 
-  inquieriesRestrictions:
-    | {
-        id: string;
-        inquiryId: string;
-        restrictionId: string;
-        justification: string;
+  inquieriesRestrictions: IInquiryRestriction[] | [];
+}
 
-        restriction: {
-          id: string;
-          type: IRestrictionTypes;
-          article: string | null;
-          description: string | null;
-        };
-      }[]
-    | [];
+export interface IInquiryRestriction {
+  id: string;
+  inquiryId: string;
+  restrictionId: string;
+  justification: string;
+
+  restriction: {
+    id: string;
+    type: IRestrictionTypes;
+    article: string | null;
+    description: string | null;
+  };
 }
 
 export enum IResultInquiries {

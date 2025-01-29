@@ -2,7 +2,7 @@
 
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn, getInquiryCode } from "@/lib/utils";
 import {
   IInquiry,
   IResultInquiries,
@@ -26,7 +26,9 @@ import {
   Circle,
   Crown,
   Edit2,
+  Eye,
   MoreHorizontal,
+  ScanSearch,
   ShieldBan,
   ShieldCheck,
   ShieldEllipsis,
@@ -35,24 +37,31 @@ import {
 } from "lucide-react";
 import { DialogInquiry } from "../dialog_inquiry";
 import { BadgeResultInquiry } from "../badge_result_inquiry";
+import { DialogSetInvestigator } from "../dialog_set_investigator";
+import { IUserProfile } from "@/utils/types/user.type";
+import { Session } from "@auth/core/types";
+import { DialogAdminApproval } from "../dialog_admin_approval";
 
-export const columns: ColumnDef<IInquiry>[] = [
+type ColumnsProps = {
+  session: Session | null;
+};
+
+export const columns = ({ session }: ColumnsProps): ColumnDef<IInquiry>[] => [
   {
     accessorKey: "code",
     header: "Código",
     meta: {
-      headerClassName: "text-xs",
+      headerClassName: "w-20 text-xs",
     },
     cell: ({ row: { original: inquiry } }) => {
-      const requestDateISO = new Date(inquiry.requestDate);
-
       return (
         <div className="w-20 max-w-20 text-xs text-center">
+          #
           <span className="">
-            {requestDateISO.getUTCFullYear()}
-            {String(requestDateISO.getUTCMonth() + 1).padStart(2, "0")}
-            {String(requestDateISO.getUTCDate()).padStart(2, "0")}-
-            {String(inquiry.code).padStart(6, "0")}
+            {getInquiryCode({
+              requestDate: inquiry.requestDate,
+              code: inquiry.code,
+            })}
           </span>
         </div>
       );
@@ -62,7 +71,7 @@ export const columns: ColumnDef<IInquiry>[] = [
     accessorKey: "requestDate",
     header: "Data da Solicitação",
     meta: {
-      headerClassName: "w-20 text-xs",
+      headerClassName: "w-20 text-xs text-center",
     },
     cell: ({ row: { original: inquiry } }) => {
       const requestDateISO = new Date(inquiry.requestDate);
@@ -116,13 +125,13 @@ export const columns: ColumnDef<IInquiry>[] = [
     // id: "filial",
     header: "Consultor",
     meta: {
-      headerClassName: "w-40 text-xs  flex justify-center items-center",
+      headerClassName: "w-40 text-xs text-center",
     },
     cell: ({ row: { original: inquiry } }) => {
       if (!inquiry.investigator) return null;
 
       return (
-        <div className="flex items-center justify-center text-xs gap-1 w-full max-w-40 bg-muted rounded-full px-4 py-1">
+        <div className="flex items-center justify-center  text-xs gap-2 w-full max-w-40 bg-muted rounded-full px-4 py-1 ">
           <UserRoundSearch size={16} />
           <span className="text-ellipsis overflow-hidden">
             {inquiry.investigator?.name}
@@ -158,6 +167,7 @@ export const columns: ColumnDef<IInquiry>[] = [
       return BadgeResultInquiry({
         inquiryResult: inquiry.result,
         inquiryInvestigator: !!inquiry.investigatorId,
+        userProfile: session?.user.profile,
       });
     },
   },
@@ -165,11 +175,11 @@ export const columns: ColumnDef<IInquiry>[] = [
   {
     id: "actions",
     meta: {
-      headerClassName: "w-12 text-xs",
+      headerClassName: "w-20 text-xs",
     },
     cell: ({ row: { original: inquiry } }) => {
       return (
-        <div className="flex items-center gap-2 justify-end">
+        <div className="flex items-center gap-4 justify-center">
           {/* {!inquiry.investigatorId && !inquiry.result && (
           )} */}
           <DialogInquiry
@@ -177,17 +187,46 @@ export const columns: ColumnDef<IInquiry>[] = [
               <button className="flex items-center gap-2">
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Edit2 size={12} />
+                    {session?.user.profile === IUserProfile.INVESTIGATOR ? (
+                      <ScanSearch size={14} />
+                    ) : !inquiry.investigatorId && !inquiry.result ? (
+                      <Edit2 size={14} />
+                    ) : (
+                      <Eye size={14} />
+                    )}
                   </TooltipTrigger>
                   <TooltipContent side="top">
-                    <p className="text-xs">Editar</p>
+                    <p className="text-xs">
+                      {inquiry.investigatorId &&
+                      session?.user.profile === IUserProfile.INVESTIGATOR
+                        ? "Continuar Processo"
+                        : !inquiry.result &&
+                          session?.user.profile === IUserProfile.BRANCH &&
+                          !inquiry.investigatorId
+                        ? "Editar"
+                        : "Visualizar"}
+                    </p>
                   </TooltipContent>
                 </Tooltip>
               </button>
             }
-            dialogTitle="Editando Consulta"
+            dialogTitle={
+              !inquiry.investigatorId && !inquiry.result
+                ? "Editando Consulta"
+                : "Visualizando Consulta"
+            }
             editInquiry={inquiry}
           />
+
+          {session?.user.profile === IUserProfile.ADMIN && (
+            <DialogSetInvestigator editInquiry={inquiry} />
+          )}
+
+          {session?.user.profile === IUserProfile.ADMIN &&
+            inquiry.result &&
+            !inquiry.adminApprovalDate && (
+              <DialogAdminApproval inquiry={inquiry} />
+            )}
 
           <DropdownMenu>
             <Tooltip>

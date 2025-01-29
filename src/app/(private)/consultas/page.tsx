@@ -1,10 +1,10 @@
-import { IInquiry } from "@/utils/types/inquiry.type";
 import { TableInquiry } from "./_components/table_inquiry";
 import { api } from "@/lib/api";
 import { DialogInquiry } from "./_components/dialog_inquiry";
 import { PlusCircle } from "lucide-react";
-import { auth } from "@/lib/auth";
 import { IUserProfile } from "@/utils/types/user.type";
+import { IInquiry } from "@/utils/types/inquiry.type";
+import { auth } from "@/lib/auth";
 
 export default async function InquiriesPage() {
   const session = await auth();
@@ -36,11 +36,6 @@ export default async function InquiriesPage() {
           dialogTitle="Nova Empresa"
         />
       </div>
-      {/* <div className="flex flex-col items-center justify-center my-10">
-        <p className="text-sm">
-          Página em desenvolvimento, em breve estará liberada...
-        </p>
-      </div> */}
 
       <div className="my-4">
         <TableInquiry inquiry={records} />

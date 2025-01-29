@@ -3,17 +3,20 @@ import {
   IResultInquiries,
   RESULT_INQUIRY_LABELS,
 } from "@/utils/types/inquiry.type";
+import { IUserProfile } from "@/utils/types/user.type";
 import { ShieldBan, ShieldCheck, ShieldEllipsis } from "lucide-react";
 
 type BadgeResultProps = {
   inquiryResult: IResultInquiries | null;
   inquiryInvestigator: boolean;
+  userProfile: IUserProfile;
   className?: string;
 };
 
 export const BadgeResultInquiry = ({
   inquiryResult,
   inquiryInvestigator,
+  userProfile,
   className,
 }: BadgeResultProps) => {
   return (
@@ -29,7 +32,10 @@ export const BadgeResultInquiry = ({
             inquiryResult === IResultInquiries.REJECTED,
         },
         {
-          "bg-cyan-500/10 text-cyan-500": !inquiryResult && inquiryInvestigator,
+          "bg-cyan-500/10 text-cyan-500":
+            !inquiryResult &&
+            inquiryInvestigator &&
+            userProfile !== IUserProfile.INVESTIGATOR,
         },
         className
       )}
@@ -48,9 +54,9 @@ export const BadgeResultInquiry = ({
       <span className="">
         {inquiryResult
           ? RESULT_INQUIRY_LABELS[inquiryResult]
-          : inquiryInvestigator
-          ? "Em Andamento"
-          : "Aguardando"}
+          : !inquiryInvestigator || userProfile === IUserProfile.INVESTIGATOR
+          ? "Aguardando"
+          : "Em Andamento"}
       </span>
     </div>
   );
