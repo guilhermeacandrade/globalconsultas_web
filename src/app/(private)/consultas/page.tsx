@@ -8,6 +8,8 @@ import { auth } from "@/lib/auth";
 
 export default async function InquiriesPage() {
   const session = await auth();
+  console.log("🚀 ~ InquiriesPage ~ session:", session);
+  console.log("🚀 ~ InquiriesPage ~ session.user:", session?.user);
 
   let url: string = "/inquiry";
 
