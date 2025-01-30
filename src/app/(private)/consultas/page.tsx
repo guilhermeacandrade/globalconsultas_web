@@ -1,20 +1,15 @@
-"use client";
-
 import { TableInquiry } from "./_components/table_inquiry";
 import { api } from "@/lib/api";
 import { DialogInquiry } from "./_components/dialog_inquiry";
 import { PlusCircle } from "lucide-react";
 import { IUserProfile } from "@/utils/types/user.type";
 import { IInquiry } from "@/utils/types/inquiry.type";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { auth } from "@/lib/auth";
 
-export default function InquiriesPage() {
-  const { data: session } = useSession();
-  console.log("🚀 ~ InquiriesPage ~ session:", session);
-  console.log("🚀 ~ InquiriesPage ~ session.user:", session?.user);
+export default async function InquiriesPage() {
+  const session = await auth();
 
-  const [records, setRecords] = useState<IInquiry[] | []>([]);
+  // const [records, setRecords] = useState<IInquiry[] | []>([]);
 
   let url: string = "/inquiry";
 
@@ -25,16 +20,19 @@ export default function InquiriesPage() {
   if (session?.user.profile === IUserProfile.BRANCH)
     url = url + `/branch/${session.user.branchId}`;
 
-  useEffect(() => {
-    const getRecords = async () => {
-      const resp = await api.get(url);
-      const records: IInquiry[] = resp.data.data;
+  const resp = await api.get(url);
+  const records: IInquiry[] = resp.data.data;
 
-      setRecords(records);
-    };
+  // useEffect(() => {
+  //   const getRecords = async () => {
+  //     const resp = await api.get(url);
+  //     const records: IInquiry[] = resp.data.data;
 
-    getRecords();
-  }, []);
+  //     setRecords(records);
+  //   };
+
+  //   getRecords();
+  // }, []);
 
   return (
     <div className="mt-3 px-2 max-w-5xl mx-auto">
