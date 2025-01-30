@@ -1,5 +1,6 @@
 "use client";
 
+import { ChartConsult } from "@/app/(private)/_components/ChartConsult";
 import { api } from "@/lib/api";
 import { ICompany } from "@/utils/types/company.type";
 import Image from "next/image";
@@ -36,7 +37,7 @@ export default function DashboardCompanyPage() {
 
   return (
     <div className="mt-8 px-2">
-      <div className="flex gap-3 items-center">
+      <div className="flex gap-3 items-center mb-8">
         {logoUrl && (
           <Image
             src={logoUrl}
@@ -52,6 +53,10 @@ export default function DashboardCompanyPage() {
           <p className="text-sm text-gray-400">Gestão de filiais</p>
           {/* <p className="text-xs text-gray-200">ID: {params.id}</p> */}
         </div>
+      </div>
+
+      <div className="">
+        <ChartConsult />
       </div>
     </div>
   );
