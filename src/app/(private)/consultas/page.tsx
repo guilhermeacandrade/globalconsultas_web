@@ -7,19 +7,19 @@ import { IInquiry } from "@/utils/types/inquiry.type";
 import { auth } from "@/lib/auth";
 
 export default async function InquiriesPage() {
-  const session = await auth();
+  // const session = await auth();
 
-  let url: string = "/inquiry";
+  // let url: string = "/inquiry";
 
-  if (session?.user.profile === IUserProfile.INVESTIGATOR)
-    url = url + `/investigator/${session.user.id}`;
-  if (session?.user.profile === IUserProfile.COMPANY)
-    url = url + `/company/${session.user.companyId}`;
-  if (session?.user.profile === IUserProfile.BRANCH)
-    url = url + `/branch/${session.user.branchId}`;
+  // if (session?.user.profile === IUserProfile.INVESTIGATOR)
+  //   url = url + `/investigator/${session.user.id}`;
+  // if (session?.user.profile === IUserProfile.COMPANY)
+  //   url = url + `/company/${session.user.companyId}`;
+  // if (session?.user.profile === IUserProfile.BRANCH)
+  //   url = url + `/branch/${session.user.branchId}`;
 
-  const resp = await api.get(url);
-  const records: IInquiry[] = resp.data.data;
+  // const resp = await api.get(url);
+  // const records: IInquiry[] = resp.data.data;
 
   return (
     <div>
