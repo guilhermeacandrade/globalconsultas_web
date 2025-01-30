@@ -4,35 +4,19 @@ import { DialogInquiry } from "./_components/dialog_inquiry";
 import { PlusCircle } from "lucide-react";
 import { IUserProfile } from "@/utils/types/user.type";
 import { IInquiry } from "@/utils/types/inquiry.type";
-import { auth } from "@/lib/auth";
 
 export default async function InquiriesPage() {
-  const session = await auth();
+  // let url: string = "/inquiry";
 
-  // const [records, setRecords] = useState<IInquiry[] | []>([]);
+  // if (session?.user.profile === IUserProfile.INVESTIGATOR)
+  //   url = url + `/investigator/${session.user.id}`;
+  // if (session?.user.profile === IUserProfile.COMPANY)
+  //   url = url + `/company/${session.user.companyId}`;
+  // if (session?.user.profile === IUserProfile.BRANCH)
+  //   url = url + `/branch/${session.user.branchId}`;
 
-  let url: string = "/inquiry";
-
-  if (session?.user.profile === IUserProfile.INVESTIGATOR)
-    url = url + `/investigator/${session.user.id}`;
-  if (session?.user.profile === IUserProfile.COMPANY)
-    url = url + `/company/${session.user.companyId}`;
-  if (session?.user.profile === IUserProfile.BRANCH)
-    url = url + `/branch/${session.user.branchId}`;
-
-  const resp = await api.get(url);
-  const records: IInquiry[] = resp.data.data;
-
-  // useEffect(() => {
-  //   const getRecords = async () => {
-  //     const resp = await api.get(url);
-  //     const records: IInquiry[] = resp.data.data;
-
-  //     setRecords(records);
-  //   };
-
-  //   getRecords();
-  // }, []);
+  // const resp = await api.get(url);
+  // const records: IInquiry[] = resp.data.data;
 
   return (
     <div className="mt-3 px-2 max-w-5xl mx-auto">
@@ -51,7 +35,8 @@ export default async function InquiriesPage() {
       </div>
 
       <div className="my-4">
-        <TableInquiry inquiry={records} />
+        {/* <TableInquiry inquiry={records} /> */}
+        <TableInquiry />
       </div>
     </div>
   );
