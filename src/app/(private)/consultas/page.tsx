@@ -22,24 +22,30 @@ export default async function InquiriesPage() {
   const records: IInquiry[] = resp.data.data;
 
   return (
-    <div className="mt-3 px-2 max-w-5xl mx-auto">
-      <div className="py-2 flex justify-between items-center">
-        <h3 className="text-xl font-semibold">Consultas</h3>
-
-        <DialogInquiry
-          trigger={
-            <button className="flex items-center gap-1 bg-primary text-background py-2 px-3 rounded-lg text-sm hover:bg-primary/90">
-              <PlusCircle size={20} />
-              Nova Consulta
-            </button>
-          }
-          dialogTitle="Nova Empresa"
-        />
-      </div>
-
-      <div className="my-4">
-        <TableInquiry inquiry={records} />
-      </div>
+    <div>
+      <h1>Consultas teste</h1>
     </div>
   );
+
+  // return (
+  //   <div className="mt-3 px-2 max-w-5xl mx-auto">
+  //     <div className="py-2 flex justify-between items-center">
+  //       <h3 className="text-xl font-semibold">Consultas</h3>
+
+  //       <DialogInquiry
+  //         trigger={
+  //           <button className="flex items-center gap-1 bg-primary text-background py-2 px-3 rounded-lg text-sm hover:bg-primary/90">
+  //             <PlusCircle size={20} />
+  //             Nova Consulta
+  //           </button>
+  //         }
+  //         dialogTitle="Nova Empresa"
+  //       />
+  //     </div>
+
+  //     <div className="my-4">
+  //       <TableInquiry inquiry={records} />
+  //     </div>
+  //   </div>
+  // );
 }
