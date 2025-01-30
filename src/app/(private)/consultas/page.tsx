@@ -45,9 +45,9 @@ export default async function InquiriesPage() {
         />
       </div>
 
-      <div className="my-4">
+      {/* <div className="my-4">
         <TableInquiry inquiry={records} />
-      </div>
+      </div> */}
     </div>
   );
 }
