@@ -19,8 +19,12 @@ export default async function InquiriesPage() {
   //   url = url + `/branch/${session.user.branchId}`;
 
   // const resp = await api.get(url);
-  const resp = await api.get("/inquiry");
-  console.log("🚀 ~ InquiriesPage ~ resp:", resp);
+  try {
+    const resp = await api.get("/inquiry");
+    console.log("🚀 ~ InquiriesPage ~ resp:", resp);
+  } catch (error) {
+    console.log("🚀 ~ InquiriesPage ~ error:", error);
+  }
   // const records: IInquiry[] = resp.data.data;
 
   // return (
