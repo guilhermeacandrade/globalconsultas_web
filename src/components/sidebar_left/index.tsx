@@ -43,18 +43,23 @@ export function SidebarLeft() {
       href: `/${
         session?.user.profile === IUserProfile.COMPANY
           ? `dashboard/c/${session.user.companyId}`
+          : session?.user.profile === IUserProfile.BRANCH
+          ? `dashboard/b/${session.user.branchId}`
           : ""
       }`,
       icon: <LayoutDashboard className="" />,
       pathName: `/${
         session?.user.profile === IUserProfile.COMPANY
           ? `dashboard/c/${session.user.companyId}`
+          : session?.user.profile === IUserProfile.BRANCH
+          ? `dashboard/b/${session.user.branchId}`
           : ""
       }`,
       allowedProfiles: [
         IUserProfile.ADMIN,
         IUserProfile.COMPANY,
         IUserProfile.INVESTIGATOR,
+        IUserProfile.BRANCH,
       ],
     },
     {

@@ -15,6 +15,15 @@ export default auth((req) => {
     return Response.redirect(newUrl);
   }
 
+  if (req.nextUrl.pathname === "/" && req.auth.user.profile === "BRANCH") {
+    // console.log(`/dashboard/c/${req.auth.user.companyId}`);
+    const newUrl = new URL(
+      `/dashboard/b/${req.auth.user.branchId}`,
+      req.nextUrl.origin
+    );
+    return Response.redirect(newUrl);
+  }
+
   // console.log("Rota permitida:", req.nextUrl.pathname);
 });
 
