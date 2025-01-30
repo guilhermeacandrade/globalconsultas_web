@@ -1,15 +1,20 @@
+"use client";
+
 import { TableInquiry } from "./_components/table_inquiry";
 import { api } from "@/lib/api";
 import { DialogInquiry } from "./_components/dialog_inquiry";
 import { PlusCircle } from "lucide-react";
 import { IUserProfile } from "@/utils/types/user.type";
 import { IInquiry } from "@/utils/types/inquiry.type";
-import { auth } from "@/lib/auth";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
-export default async function InquiriesPage() {
-  const session = await auth();
+export default function InquiriesPage() {
+  const { data: session } = useSession();
   console.log("🚀 ~ InquiriesPage ~ session:", session);
   console.log("🚀 ~ InquiriesPage ~ session.user:", session?.user);
+
+  const [records, setRecords] = useState<IInquiry[] | []>([]);
 
   let url: string = "/inquiry";
 
@@ -20,8 +25,16 @@ export default async function InquiriesPage() {
   if (session?.user.profile === IUserProfile.BRANCH)
     url = url + `/branch/${session.user.branchId}`;
 
-  const resp = await api.get(url);
-  const records: IInquiry[] = resp.data.data;
+  useEffect(() => {
+    const getRecords = async () => {
+      const resp = await api.get(url);
+      const records: IInquiry[] = resp.data.data;
+
+      setRecords(records);
+    };
+
+    getRecords();
+  }, []);
 
   return (
     <div className="mt-3 px-2 max-w-5xl mx-auto">
