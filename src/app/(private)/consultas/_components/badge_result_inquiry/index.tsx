@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import {
+  IInquiry,
   IResultInquiries,
   RESULT_INQUIRY_LABELS,
 } from "@/utils/types/inquiry.type";
@@ -7,15 +8,13 @@ import { IUserProfile } from "@/utils/types/user.type";
 import { ShieldBan, ShieldCheck, ShieldEllipsis } from "lucide-react";
 
 type BadgeResultProps = {
-  inquiryResult: IResultInquiries | null;
-  inquiryInvestigator: boolean;
+  inquiry: IInquiry;
   userProfile: IUserProfile;
   className?: string;
 };
 
 export const BadgeResultInquiry = ({
-  inquiryResult,
-  inquiryInvestigator,
+  inquiry,
   userProfile,
   className,
 }: BadgeResultProps) => {
@@ -25,38 +24,60 @@ export const BadgeResultInquiry = ({
         "flex w-full  max-w-32 items-center justify-center px-2 py-1 font-semibold gap-2 text-xs rounded-xl bg-amber-300/40 text-amber-600",
         {
           "bg-green-500/10 text-green-500":
-            inquiryResult === IResultInquiries.APPROVED,
+            inquiry.result === IResultInquiries.APPROVED &&
+            (inquiry.adminApprovalDate ||
+              [IUserProfile.ADMIN, IUserProfile.INVESTIGATOR].includes(
+                userProfile
+              )),
         },
         {
           "bg-red-500/10 text-red-500":
-            inquiryResult === IResultInquiries.REJECTED,
+            inquiry.result === IResultInquiries.REJECTED &&
+            (inquiry.adminApprovalDate ||
+              [IUserProfile.ADMIN, IUserProfile.INVESTIGATOR].includes(
+                userProfile
+              )),
         },
         {
           "bg-cyan-500/10 text-cyan-500":
-            !inquiryResult &&
-            inquiryInvestigator &&
-            userProfile !== IUserProfile.INVESTIGATOR,
+            !inquiry.result &&
+            userProfile !== IUserProfile.INVESTIGATOR &&
+            inquiry.investigatorId,
         },
         className
       )}
     >
       <div className="">
-        {inquiryResult === IResultInquiries.APPROVED && (
-          <ShieldCheck size={12} />
-        )}
-        {inquiryResult === IResultInquiries.REJECTED && <ShieldBan size={12} />}
-        {inquiryResult !== IResultInquiries.APPROVED &&
-          inquiryResult !== IResultInquiries.REJECTED && (
-            <ShieldEllipsis size={12} />
-          )}
+        {inquiry.result === IResultInquiries.APPROVED &&
+          (inquiry.adminApprovalDate ||
+            [IUserProfile.ADMIN, IUserProfile.INVESTIGATOR].includes(
+              userProfile
+            )) && <ShieldCheck size={12} />}
+        {inquiry.result === IResultInquiries.REJECTED &&
+          (inquiry.adminApprovalDate ||
+            [IUserProfile.ADMIN, IUserProfile.INVESTIGATOR].includes(
+              userProfile
+            )) && <ShieldBan size={12} />}
+        {((![IUserProfile.ADMIN, IUserProfile.INVESTIGATOR].includes(
+          userProfile
+        ) &&
+          !inquiry.adminApprovalDate) ||
+          ([IUserProfile.ADMIN, IUserProfile.INVESTIGATOR].includes(
+            userProfile
+          ) &&
+            !inquiry.result)) && <ShieldEllipsis size={12} />}
       </div>
 
       <span className="">
-        {inquiryResult
-          ? RESULT_INQUIRY_LABELS[inquiryResult]
-          : !inquiryInvestigator || userProfile === IUserProfile.INVESTIGATOR
-          ? "Aguardando"
-          : "Em Andamento"}
+        {inquiry.result &&
+        (inquiry.adminApprovalDate ||
+          [IUserProfile.ADMIN, IUserProfile.INVESTIGATOR].includes(userProfile))
+          ? RESULT_INQUIRY_LABELS[inquiry.result]
+          : userProfile === IUserProfile.INVESTIGATOR
+          ? "Pendente"
+          : inquiry.investigatorId
+          ? "Em Andamento"
+          : "Aguardando"}
       </span>
     </div>
   );

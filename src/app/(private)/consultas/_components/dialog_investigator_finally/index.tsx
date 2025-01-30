@@ -25,16 +25,15 @@ import {
   formatRG,
   getInquiryCode,
 } from "@/lib/utils";
-import { IInquiry } from "@/utils/types/inquiry.type";
-import { CheckCheck, CircleX, LoaderCircle, SearchCheck } from "lucide-react";
+import { IInquiry, IResultInquiries } from "@/utils/types/inquiry.type";
+import { CheckCheck, CircleX, LoaderCircle, Stamp } from "lucide-react";
 import React, { useState, useTransition } from "react";
 import { BadgeResultInquiry } from "../badge_result_inquiry";
 import { useSession } from "next-auth/react";
-import { updateAdminApproval } from "@/actions/inquiries/update_admin_approval";
 import { toast } from "@/hooks/use-toast";
-import { updateAdminReverse } from "@/actions/inquiries/update_admin_reverse";
+import { updateInvestigatorFinally } from "@/actions/inquiries/update_investigator_finally";
 
-interface DialogAdminApprovalProps {
+interface DialogInvestigatorFinallyProps {
   inquiry: IInquiry;
 }
 
@@ -56,17 +55,24 @@ const FieldMessage = (data: {
   );
 };
 
-export function DialogAdminApproval({ inquiry }: DialogAdminApprovalProps) {
+export function DialogInvestigatorFinally({
+  inquiry,
+}: DialogInvestigatorFinallyProps) {
   const { data: session } = useSession();
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
-  const [isPendingApprove, startTransitionApprove] = useTransition();
-  const [isPendingReverse, startTransitionReverse] = useTransition();
+  const [isPending, startTransition] = useTransition();
 
-  function handleApprove() {
-    startTransitionApprove(async () => {
+  function handleFinally({
+    inquiryId,
+    result,
+  }: {
+    inquiryId: string;
+    result: IResultInquiries;
+  }) {
+    startTransition(async () => {
       try {
         // update
-        const res = await updateAdminApproval({ id: inquiry.id });
+        const res = await updateInvestigatorFinally({ id: inquiryId, result });
 
         toast({
           title: "Sucesso!",
@@ -74,41 +80,6 @@ export function DialogAdminApproval({ inquiry }: DialogAdminApprovalProps) {
             <p className="flex items-center gap-3">
               <CheckCheck className="text-green-500" />
               Consulta aprovada com sucesso.
-            </p>
-          ),
-          duration: durationToast,
-        });
-
-        setDialogIsOpen(false);
-      } catch (err: any) {
-        console.log(err);
-
-        toast({
-          title: "Erro!",
-          description: (
-            <p className="flex items-center gap-3">
-              <CircleX className="text-red-500" />
-              {err.message}
-            </p>
-          ),
-          duration: durationToast,
-        });
-      }
-    });
-  }
-
-  function handleReverse() {
-    startTransitionReverse(async () => {
-      try {
-        // update
-        const res = await updateAdminReverse({ id: inquiry.id });
-
-        toast({
-          title: "Sucesso!",
-          description: (
-            <p className="flex items-center gap-3">
-              <CheckCheck className="text-green-500" />
-              Consulta aberta para consultor com sucesso.
             </p>
           ),
           duration: durationToast,
@@ -140,13 +111,13 @@ export function DialogAdminApproval({ inquiry }: DialogAdminApprovalProps) {
       }}
     >
       <DialogTrigger asChild>
-        <button className="flex items-center gap-2">
+        <button className="flex items-center gap-2 rounded-full p-2 hover:bg-primary hover:text-background duration-1000">
           <Tooltip>
             <TooltipTrigger asChild>
-              <SearchCheck size={14} />
+              <Stamp size={14} />
             </TooltipTrigger>
-            <TooltipContent side="top">
-              <p className="text-xs">Aprovar Consulta</p>
+            <TooltipContent side="top" className="mb-2">
+              <p className="text-xs">Finalizar Consulta</p>
             </TooltipContent>
           </Tooltip>
         </button>
@@ -158,7 +129,7 @@ export function DialogAdminApproval({ inquiry }: DialogAdminApprovalProps) {
         onEscapeKeyDown={(e) => e.preventDefault()} // Não fechar o dialog ao apertar a tecla ESC
       >
         <DialogHeader>
-          <DialogTitle>Deseja realmente aprovar esta consulta?</DialogTitle>
+          <DialogTitle>Finalizar Consulta</DialogTitle>
         </DialogHeader>
 
         <ScrollArea className="flex-1 overflow-auto mt-4">
@@ -205,37 +176,47 @@ export function DialogAdminApproval({ inquiry }: DialogAdminApprovalProps) {
 
             <div>
               <BadgeResultInquiry
-                inquiry={inquiry}
                 userProfile={session?.user.profile}
+                inquiry={inquiry}
                 className="max-w-full my-5"
               />
             </div>
 
-            <div className="grid grid-cols-3 mt-10">
-              <Button
+            <div className="grid grid-cols-2 mt-10">
+              {/* <Button
                 className="w-full max-w-32 mx-auto bg-muted hover:bg-muted/90 text-muted-foreground"
                 onClick={() => setDialogIsOpen(false)}
               >
                 Voltar
-              </Button>
+              </Button> */}
               <Button
                 className="w-full max-w-32 mx-auto"
                 variant={"destructive"}
-                disabled={isPendingReverse}
-                onClick={handleReverse}
+                disabled={isPending}
+                onClick={() =>
+                  handleFinally({
+                    inquiryId: inquiry.id,
+                    result: IResultInquiries.REJECTED,
+                  })
+                }
               >
-                {isPendingReverse ? (
+                {isPending ? (
                   <LoaderCircle size={24} className="animate-spin" />
                 ) : (
-                  "Reabrir Consulta"
+                  "Reprovar"
                 )}
               </Button>
               <Button
                 className="w-full max-w-32 mx-auto"
-                disabled={isPendingApprove}
-                onClick={handleApprove}
+                disabled={isPending}
+                onClick={() =>
+                  handleFinally({
+                    inquiryId: inquiry.id,
+                    result: IResultInquiries.APPROVED,
+                  })
+                }
               >
-                {isPendingApprove ? (
+                {isPending ? (
                   <LoaderCircle size={24} className="animate-spin" />
                 ) : (
                   "Aprovar"

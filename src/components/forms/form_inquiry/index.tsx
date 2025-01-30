@@ -405,8 +405,7 @@ export function FormInquiry({ editInquiry, closeModal }: IFormInquiryProps) {
 
         {editInquiry &&
           BadgeResultInquiry({
-            inquiryResult: editInquiry.result,
-            inquiryInvestigator: !!editInquiry.investigatorId,
+            inquiry: editInquiry,
             userProfile: session?.user.profile,
             className: "max-w-full mt-5",
           })}
@@ -868,7 +867,14 @@ export function FormInquiry({ editInquiry, closeModal }: IFormInquiryProps) {
                             </span>
                           </div>
 
-                          <div className="flex gap-2 px-2">
+                          <div
+                            className={cn("flex gap-2 px-2", {
+                              hidden:
+                                session?.user.profile !==
+                                  IUserProfile.INVESTIGATOR ||
+                                editInquiry?.result,
+                            })}
+                          >
                             <button
                               className="hover:text-primary duration-200"
                               onClick={() => {
@@ -905,17 +911,20 @@ export function FormInquiry({ editInquiry, closeModal }: IFormInquiryProps) {
                   </div>
                 )}
 
-                <Button
-                  className="self-center mt-10"
-                  onClick={() =>
-                    setDataRestriction({
-                      showFields: true,
-                      editRestriction: null,
-                    })
-                  }
-                >
-                  Lançar Restrição
-                </Button>
+                {session?.user.profile === IUserProfile.INVESTIGATOR &&
+                  !editInquiry?.result && (
+                    <Button
+                      className="self-center mt-10"
+                      onClick={() =>
+                        setDataRestriction({
+                          showFields: true,
+                          editRestriction: null,
+                        })
+                      }
+                    >
+                      Lançar Restrição
+                    </Button>
+                  )}
               </div>
             )}
             <ScrollBar />

@@ -41,6 +41,7 @@ import { DialogSetInvestigator } from "../dialog_set_investigator";
 import { IUserProfile } from "@/utils/types/user.type";
 import { Session } from "@auth/core/types";
 import { DialogAdminApproval } from "../dialog_admin_approval";
+import { DialogInvestigatorFinally } from "../dialog_investigator_finally";
 
 type ColumnsProps = {
   session: Session | null;
@@ -165,8 +166,7 @@ export const columns = ({ session }: ColumnsProps): ColumnDef<IInquiry>[] => [
     },
     cell: ({ row: { original: inquiry } }) => {
       return BadgeResultInquiry({
-        inquiryResult: inquiry.result,
-        inquiryInvestigator: !!inquiry.investigatorId,
+        inquiry: inquiry,
         userProfile: session?.user.profile,
       });
     },
@@ -187,7 +187,8 @@ export const columns = ({ session }: ColumnsProps): ColumnDef<IInquiry>[] => [
               <button className="flex items-center gap-2">
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    {session?.user.profile === IUserProfile.INVESTIGATOR ? (
+                    {session?.user.profile === IUserProfile.INVESTIGATOR &&
+                    !inquiry.result ? (
                       <ScanSearch size={14} />
                     ) : !inquiry.investigatorId && !inquiry.result ? (
                       <Edit2 size={14} />
@@ -198,7 +199,8 @@ export const columns = ({ session }: ColumnsProps): ColumnDef<IInquiry>[] => [
                   <TooltipContent side="top">
                     <p className="text-xs">
                       {inquiry.investigatorId &&
-                      session?.user.profile === IUserProfile.INVESTIGATOR
+                      session?.user.profile === IUserProfile.INVESTIGATOR &&
+                      !inquiry.result
                         ? "Continuar Processo"
                         : !inquiry.result &&
                           session?.user.profile === IUserProfile.BRANCH &&
@@ -218,13 +220,16 @@ export const columns = ({ session }: ColumnsProps): ColumnDef<IInquiry>[] => [
             editInquiry={inquiry}
           />
 
-          {session?.user.profile === IUserProfile.ADMIN && (
+          {session?.user.profile === IUserProfile.INVESTIGATOR &&
+            !inquiry.result && <DialogInvestigatorFinally inquiry={inquiry} />}
+
+          {session?.user.profile === IUserProfile.ADMIN && !inquiry.result && (
             <DialogSetInvestigator editInquiry={inquiry} />
           )}
 
           {session?.user.profile === IUserProfile.ADMIN &&
             inquiry.result &&
-            !inquiry.adminApprovalDate && (
+            inquiry.adminApprovalDate === null && (
               <DialogAdminApproval inquiry={inquiry} />
             )}
 

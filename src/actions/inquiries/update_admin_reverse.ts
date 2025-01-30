@@ -5,12 +5,12 @@
 import { api } from "@/lib/api";
 import { revalidatePath } from "next/cache";
 
-interface UpdateAdminApprovalProps {
+interface UpdateAdminReverseProps {
   id: string;
 }
 
-export async function updateAdminApproval(params: UpdateAdminApprovalProps) {
-  const resp = await api.put(`/inquiry/admin-approved/${params.id}`);
+export async function updateAdminReverse(params: UpdateAdminReverseProps) {
+  const resp = await api.put(`/inquiry/admin-reverse/${params.id}`);
 
   // console.log(resp);
 
