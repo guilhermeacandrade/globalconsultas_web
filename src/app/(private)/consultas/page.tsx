@@ -20,7 +20,8 @@ export default async function InquiriesPage() {
 
   // const resp = await api.get(url);
   const resp = await api.get("/inquiry");
-  const records: IInquiry[] = resp.data.data;
+  console.log("🚀 ~ InquiriesPage ~ resp:", resp);
+  // const records: IInquiry[] = resp.data.data;
 
   // return (
   //   <div>
