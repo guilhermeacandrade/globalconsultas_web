@@ -9,7 +9,7 @@ import { auth } from "@/lib/auth";
 export default async function InquiriesPage() {
   // const session = await auth();
 
-  let url: string = "/inquiry";
+  const url: string = "/inquiry";
 
   // if (session?.user.profile === IUserProfile.INVESTIGATOR)
   //   url = url + `/investigator/${session.user.id}`;
