@@ -1,6 +1,6 @@
 "use client";
 
-import { ChartConsult } from "@/app/(private)/_components/ChartConsult";
+import { ChartInquiries } from "@/app/(private)/_components/ChartConsult";
 import { api } from "@/lib/api";
 import { ICompany } from "@/utils/types/company.type";
 import Image from "next/image";
@@ -36,7 +36,7 @@ export default function DashboardCompanyPage() {
   // console.log("🚀 ~ PanelDynamicPage ~ params:", params);
 
   return (
-    <div className="mt-8 px-2">
+    <div className="mt-8 px-4">
       <div className="flex gap-3 items-center mb-8">
         {logoUrl && (
           <Image
@@ -56,7 +56,7 @@ export default function DashboardCompanyPage() {
       </div>
 
       <div className="">
-        <ChartConsult />
+        <ChartInquiries />
       </div>
     </div>
   );

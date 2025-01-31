@@ -41,10 +41,10 @@ export const BadgeResultInquiry = ({
         {
           "bg-cyan-500/10 text-cyan-500":
             !inquiry.adminApprovalDate &&
-            ![IUserProfile.ADMIN, IUserProfile.INVESTIGATOR].includes(
-              userProfile
-            ) &&
-            inquiry.investigatorId,
+            ![IUserProfile.INVESTIGATOR].includes(userProfile) &&
+            inquiry.investigatorId &&
+            inquiry.endDate &&
+            ![IUserProfile.ADMIN].includes(userProfile),
         },
         className
       )}

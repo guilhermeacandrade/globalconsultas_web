@@ -98,3 +98,16 @@ export function getInquiryCode(data: {
 
   return inquiryCode;
 }
+
+export function getFirstAndLastDateOfMonth(
+  year: number,
+  month: number
+): { firstDay: Date; lastDay: Date } {
+  const firstDay = new Date(year, month - 1, 1); // primeiro dia do mês
+  const lastDay = new Date(year, month, 0); // último dia do mês
+
+  return {
+    firstDay,
+    lastDay,
+  };
+}

@@ -79,6 +79,7 @@ import {
   updateInquiryRestriction,
 } from "@/actions/inquiryRestrictions";
 import { deleteInquiryRestriction } from "@/actions/inquiryRestrictions/delete_inquiry_restriction";
+import { useInquiries } from "@/hooks/use_inquiries";
 
 const schema = z.object({
   branchId: z.string({ required_error: "Obrigatório." }).min(1, "Obrigatório."),
@@ -116,6 +117,7 @@ interface DataRestrictionProps {
 
 export function FormInquiry({ editInquiry, closeModal }: IFormInquiryProps) {
   const { data: session } = useSession();
+  const { mutate } = useInquiries();
   const [isPending, startTransition] = useTransition();
   const [listBranches, setListBranches] = useState<IBranch[] | []>([]);
   const [dataRestriction, setDataRestriction] = useState<DataRestrictionProps>({
@@ -174,6 +176,8 @@ export function FormInquiry({ editInquiry, closeModal }: IFormInquiryProps) {
 
           form.reset();
         }
+
+        mutate();
 
         toast({
           title: "Sucesso!",

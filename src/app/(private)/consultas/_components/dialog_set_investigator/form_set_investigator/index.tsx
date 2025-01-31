@@ -50,6 +50,7 @@ import {
 import { api } from "@/lib/api";
 import { IUser, IUserProfile } from "@/utils/types/user.type";
 import { updateSetInvestigator } from "@/actions/inquiries/update_set_investigator";
+import { useInquiries } from "@/hooks/use_inquiries";
 
 const schema = z.object({
   investigatorId: z
@@ -69,6 +70,7 @@ export function FormSetInvestigator({
 }: IFormSetInvestigatorProps) {
   const [isPending, startTransition] = useTransition();
   const [listInvestigators, setListInvestigatorss] = useState<IUser[] | []>([]);
+  const { mutate } = useInquiries();
 
   const form = useForm<TFormSetInvestigatorData>({
     resolver: zodResolver(schema),
@@ -85,6 +87,7 @@ export function FormSetInvestigator({
           ...data,
           id: editInquiry.id,
         });
+        mutate();
 
         toast({
           title: "Sucesso!",

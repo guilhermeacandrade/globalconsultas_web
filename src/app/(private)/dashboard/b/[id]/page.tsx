@@ -35,7 +35,7 @@ export default function DashboardBranchPage() {
   // console.log("🚀 ~ PanelDynamicPage ~ params:", params);
 
   return (
-    <div className="h-full px-2 ">
+    <div className="h-full px-4 ">
       <div className="h-full flex flex-col gap-2 items-center justify-center ">
         {logoUrl && (
           <Image

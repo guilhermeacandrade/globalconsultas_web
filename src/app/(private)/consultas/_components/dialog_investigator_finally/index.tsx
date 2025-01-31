@@ -32,6 +32,7 @@ import { BadgeResultInquiry } from "../badge_result_inquiry";
 import { useSession } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
 import { updateInvestigatorFinally } from "@/actions/inquiries/update_investigator_finally";
+import { useInquiries } from "@/hooks/use_inquiries";
 
 interface DialogInvestigatorFinallyProps {
   inquiry: IInquiry;
@@ -61,6 +62,7 @@ export function DialogInvestigatorFinally({
   const { data: session } = useSession();
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const { mutate } = useInquiries();
 
   function handleFinally({
     inquiryId,
@@ -73,6 +75,7 @@ export function DialogInvestigatorFinally({
       try {
         // update
         const res = await updateInvestigatorFinally({ id: inquiryId, result });
+        mutate();
 
         toast({
           title: "Sucesso!",
