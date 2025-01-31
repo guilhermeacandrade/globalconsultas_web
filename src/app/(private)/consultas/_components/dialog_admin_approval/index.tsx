@@ -33,6 +33,7 @@ import { useSession } from "next-auth/react";
 import { updateAdminApproval } from "@/actions/inquiries/update_admin_approval";
 import { toast } from "@/hooks/use-toast";
 import { updateAdminReverse } from "@/actions/inquiries/update_admin_reverse";
+import { useInquiries } from "@/hooks/use_inquiries";
 
 interface DialogAdminApprovalProps {
   inquiry: IInquiry;
@@ -61,12 +62,14 @@ export function DialogAdminApproval({ inquiry }: DialogAdminApprovalProps) {
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const [isPendingApprove, startTransitionApprove] = useTransition();
   const [isPendingReverse, startTransitionReverse] = useTransition();
+  const { mutate } = useInquiries();
 
   function handleApprove() {
     startTransitionApprove(async () => {
       try {
         // update
         const res = await updateAdminApproval({ id: inquiry.id });
+        mutate();
 
         toast({
           title: "Sucesso!",
@@ -102,6 +105,7 @@ export function DialogAdminApproval({ inquiry }: DialogAdminApprovalProps) {
       try {
         // update
         const res = await updateAdminReverse({ id: inquiry.id });
+        mutate();
 
         toast({
           title: "Sucesso!",

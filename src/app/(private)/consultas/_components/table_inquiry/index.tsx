@@ -2,12 +2,12 @@
 
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
-import { IInquiry } from "@/utils/types/inquiry.type";
+// import { IInquiry } from "@/utils/types/inquiry.type";
 import { IUserProfile } from "@/utils/types/user.type";
 import { useSession } from "next-auth/react";
 import { LoaderCircle } from "lucide-react";
-import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { useInquiries } from "@/hooks/use_inquiries";
+import { AwaitLoading } from "@/components/await_loading";
 
 // interface TableInquiryProps {
 //   inquiry: IInquiry[];
@@ -16,41 +16,17 @@ import { api } from "@/lib/api";
 // export const TableInquiry = ({ inquiry }: TableInquiryProps) => {
 export const TableInquiry = () => {
   const { data: session } = useSession();
-  const [records, setRecords] = useState<IInquiry[] | [] | null>(null);
-
-  let url: string = "/inquiry";
-
-  if (session?.user.profile === IUserProfile.INVESTIGATOR)
-    url = url + `/investigator/${session.user.id}`;
-  if (session?.user.profile === IUserProfile.COMPANY)
-    url = url + `/company/${session.user.companyId}`;
-  if (session?.user.profile === IUserProfile.BRANCH)
-    url = url + `/branch/${session.user.branchId}`;
-
-  useEffect(() => {
-    const getRecords = async () => {
-      const resp = await api.get(url);
-      const records: IInquiry[] = resp.data.data;
-
-      setRecords(records);
-    };
-
-    getRecords();
-  }, []);
-
   const col = columns({ session });
 
-  if (!session)
-    return (
-      <div className="w-full flex justify-center text-primary">
-        <LoaderCircle size={20} className="animate-spin" />
-      </div>
-    );
+  const { inquiries, isLoading, isError } = useInquiries();
 
-  if (!records)
+  if (!session) return <AwaitLoading />;
+
+  if (isLoading) return <AwaitLoading />;
+  if (isError)
     return (
-      <div className="w-full flex justify-center text-primary">
-        <LoaderCircle size={20} className="animate-spin" />
+      <div>
+        <h3>Erro ao carregar dados...</h3>
       </div>
     );
 
@@ -58,7 +34,7 @@ export const TableInquiry = () => {
     <div>
       <DataTable
         columns={col}
-        data={records}
+        data={inquiries}
         visibilityColumns={{
           filial: session?.user.profile !== IUserProfile.BRANCH,
           investigator: session?.user.profile === IUserProfile.ADMIN,
